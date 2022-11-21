@@ -1,0 +1,23 @@
+{
+  "name": "websocket",
+  "version": "1.0.0",
+  "description": "IDK what costs money here",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FarrisIsmati/udemy-vendor-websocket.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FarrisIsmati/udemy-vendor-websocket/issues"
+  },
+  "homepage": "https://github.com/FarrisIsmati/udemy-vendor-websocket#readme",
+  "dependencies": {
+    "@types/aws-lambda": "^8.10.108",
+    "aws-lambda": "^1.0.7"
+  }
+}

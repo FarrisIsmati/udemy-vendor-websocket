@@ -44,7 +44,7 @@ jobs:
           AWS_ECR_REPOSITORY: ${{ steps.connect-ecr.outputs.repository-uri }}
         run: |
           docker build -t $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_CONNECT_TAG --target ${{ secrets.AWS_ECR_NAME_CONNECT }} .
-          docker push $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_CONNECT_TAG
+          docker push $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY
           echo "::set-output name=image::$AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_CONNECT_TAG"
 
       # - name: Build, tag, and push disconnect image to Amazon ECR

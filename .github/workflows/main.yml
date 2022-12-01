@@ -40,12 +40,12 @@ jobs:
         id: build-image-connect
         env:
           AWS_ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          AWS_IMAGE_CONNECT_TAG: ${{ secrets.AWS_ECR_NAME_CONNECT }}-${{ github.sha }}
+          AWS_IMAGE_TAG: ${{ github.sha }}
           AWS_ECR_REPOSITORY: ${{ steps.connect-ecr.outputs.repository-uri }}
         run: |
-          docker build -t $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_CONNECT_TAG --target ${{ secrets.AWS_ECR_NAME_CONNECT }} .
-          docker push $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY-${{ github.sha }}
-          echo "::set-output name=image::$AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_CONNECT_TAG"
+          docker build -t $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_TAG --target connect .
+          docker push $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_TAG
+          echo "::set-output name=image::$AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_TAG"
 
       # - name: Build, tag, and push disconnect image to Amazon ECR
       #   id: build-image-disconnect

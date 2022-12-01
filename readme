@@ -1,1 +1,39 @@
 IDK what costs money here
+Not hiding build folder
+
+Step 1
+Docker build 3 images
+
+Step 2
+Terraform send 3 images to ECR
+
+Step 3
+In terraform create a api gateway with websocket protocol
+Route selection expressions $request.body.action 
+
+Step 4
+3 Routes (for each route attach ECR Image from terraform variables as lambda function integration)
+$connect 
+$disconnect 
+$sendmessage
+
+Step 5
+Write 3 TS files that will be a lambda func
+connect - connect to dynamodb add user
+disconnect - delete from dynamodb remove user
+sendMessage - send message to all users?
+
+
+Docker commands
+
+docker build -t connect --target connect .
+docker build -t disconnect --target disconnect .
+docker build -t sendvendor --target sendvendor .
+
+docker run -p 9000:8080 connect:latest
+docker run -p 9001:8080 disconnect:latest
+docker run -p 9002:8080 sendvendor:latest
+
+curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{}'
+curl -XPOST "http://localhost:9001/2015-03-31/functions/function/invocations" -d '{}'
+curl -XPOST "http://localhost:9002/2015-03-31/functions/function/invocations" -d '{}'

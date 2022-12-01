@@ -39,7 +39,7 @@ jobs:
         run: |
           docker build -t $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_CONNECT_TAG --target ${{ secrets.AWS_ECR_NAME_CONNECT }} .
           docker push $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_CONNECT_TAG
-          echo "::set-output name=image::$AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_TAG"
+          echo "::set-output name=image::$AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_CONNECT_TAG"
 
       - name: Build, tag, and push disconnect image to Amazon ECR
         id: build-image-disconnect
@@ -50,7 +50,7 @@ jobs:
         run: |
           docker build -t $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_DISCONNECT_TAG --target ${{ secrets.AWS_ECR_NAME_DISCONNECT }} .
           docker push $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_DISCONNECT_TAG
-          echo "::set-output name=image::$AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_TAG"
+          echo "::set-output name=image::$AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_DISCONNECT_TAG"
 
       - name: Build, tag, and push sendvendor image to Amazon ECR
         id: build-image-sendvendor
@@ -61,7 +61,7 @@ jobs:
         run: |
           docker build -t $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_SENDVENDOR_TAG --target ${{ secrets.AWS_ECR_NAME_SENDVENDOR }} .
           docker push $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_SENDVENDOR_TAG
-          echo "::set-output name=image::$AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_TAG"
+          echo "::set-output name=image::$AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_SENDVENDOR_TAG"
 
       # - name: Setup Terraform 
       #   uses: hashicorp/setup-terraform@v2

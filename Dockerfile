@@ -2,7 +2,7 @@
 FROM amazon/aws-lambda-nodejs:12 AS connect
 ARG FUNCTION_DIR="/var/task"
 
-COPY package.json  package-lock.json .
+COPY package.json  package-lock.json ./
 RUN npm install\
         && npm install typescript -g
 
@@ -28,7 +28,7 @@ CMD [ "build/connect.handler" ]
 FROM amazon/aws-lambda-nodejs:12 AS disconnect
 ARG FUNCTION_DIR="/var/task"
 
-COPY package.json  package-lock.json .
+COPY package.json  package-lock.json ./
 RUN npm install\
         && npm install typescript -g
 
@@ -55,7 +55,7 @@ CMD [ "build/disconnect.handler" ]
 FROM amazon/aws-lambda-nodejs:12 AS sendvendor
 ARG FUNCTION_DIR="/var/task"
 
-COPY package.json  package-lock.json .
+COPY package.json  package-lock.json ./
 RUN npm install\
         && npm install typescript -g
 

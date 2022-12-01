@@ -39,11 +39,11 @@ jobs:
           AWS_IMAGE_SENDVENDOR_TAG: ${{ secrets.AWS_ECR_NAME_SENDVENDOR }}-${{ github.sha }}
           AWS_ECR_REPOSITORY: ${{ secrets.AWS_ECR_NAME_CONNECT }}
         run: |
-          docker build -t $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_CONNECT_TAG .
+          docker build -t $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_CONNECT_TAG --target connect .
           docker push $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_CONNECT_TAG
-          docker build -t $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_DISCONNECT_TAG .
+          docker build -t $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_DISCONNECT_TAG --target disconnect .
           docker push $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_DISCONNECT_TAG
-          docker build -t $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_SENDVENDOR_TAG .
+          docker build -t $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_SENDVENDOR_TAG --target sendvendor .
           docker push $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_SENDVENDOR_TAG
           echo "::set-output name=image::$AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_TAG"
 

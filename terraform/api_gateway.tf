@@ -28,7 +28,7 @@ resource "aws_apigatewayv2_integration" "websocket_integration" {
     template_selection_expression             = "\\$default"
     timeout_milliseconds                      = 29000
     depends_on = [
-    aws_iam_role.apigwy_websocket_sqs_role,  
+    aws_iam_role.websocket_task_execution_role,  
     ]
 }
 

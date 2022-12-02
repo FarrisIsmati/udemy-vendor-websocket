@@ -18,7 +18,7 @@ data "aws_iam_policy_document" "assume_role_policy" {
 }
 
 resource "aws_iam_policy" "websocket_sqs_recieve_message" {
-  name = "${var.app_name}-execution-task-role"
+  name = "${var.app_name}"
 
   policy = <<POLICY
 {

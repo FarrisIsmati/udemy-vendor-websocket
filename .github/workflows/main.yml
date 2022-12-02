@@ -30,6 +30,12 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
+      - name: Build connect ECR
+        uses: int128/create-ecr-repository-action@v1
+        id: connect-ecr
+        with:
+          repository: ${{ secrets.AWS_ECR_NAME_CONNECT }}
+
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
@@ -41,11 +47,6 @@ jobs:
           docker push $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_TAG
           echo "::set-output name=image::$AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_TAG"
 
-      # - name: Build connect ECR
-      #   uses: int128/create-ecr-repository-action@v1
-      #   id: connect-ecr
-      #   with:
-      #     repository: ${{ secrets.AWS_ECR_NAME_CONNECT }}
 
       # - name: Build, tag, and push connect image to Amazon ECR
       #   id: build-image-connect

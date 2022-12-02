@@ -4,6 +4,12 @@ variable "app_name" {
   default     = "udemy-vendor-websocket"
 }
 
+variable "app_name_generic" {
+  type        = string
+  description = "Application Name"
+  default     = "udemy-vendor"
+}
+
 variable "aws_region" {
   type        = string
   description = "AWS Region"
@@ -16,3 +22,4 @@ variable "sqs_name" {
   default     = "udemy-twitter-queue"
 }
 
+variable "image_tag" {}

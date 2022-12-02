@@ -37,3 +37,9 @@ docker run -p 9002:8080 sendvendor:latest
 curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{}'
 curl -XPOST "http://localhost:9001/2015-03-31/functions/function/invocations" -d '{}'
 curl -XPOST "http://localhost:9002/2015-03-31/functions/function/invocations" -d '{}'
+
+
+
+Note on terraform state
+Create individual state beforehand for each repo .tfstate file
+Tech debt: use dynamodb to handle tf state locking (mention that you're not going to do this because it's unecessary)

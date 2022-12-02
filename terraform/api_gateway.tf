@@ -38,11 +38,11 @@ resource "aws_apigatewayv2_stage" "production" {
   auto_deploy     = true
 }
 
-resource "aws_apigatewayv2_route" "default" {
-    api_id               = aws_apigatewayv2_api.udemyvendorapigateway.id
-    route_key            = "$default"
-    target               = "integrations/${aws_apigatewayv2_integration.websocket_integration.id}"  
-}
+# resource "aws_apigatewayv2_route" "default" {
+#     api_id               = aws_apigatewayv2_api.udemyvendorapigateway.id
+#     route_key            = "$default"
+#     target               = "integrations/${aws_apigatewayv2_integration.websocket_integration.id}"  
+# }
 
 
 

@@ -37,7 +37,7 @@ jobs:
           repository: ${{ secrets.AWS_ECR_NAME_CONNECT }}
 
       - name: Build, tag, and push image to Amazon ECR
-        id: build-image
+        id: build-image-connect
         env:
           AWS_ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           AWS_IMAGE_TAG: ${{ github.sha }}
@@ -54,7 +54,7 @@ jobs:
           repository: ${{ secrets.AWS_ECR_NAME_DISCONNECT }}
 
       - name: Build, tag, and push image to Amazon ECR
-        id: build-image
+        id: build-image-disconnect
         env:
           AWS_ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           AWS_IMAGE_TAG: ${{ github.sha }}

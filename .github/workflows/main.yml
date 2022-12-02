@@ -71,7 +71,7 @@ jobs:
           repository: ${{ secrets.AWS_ECR_NAME_SENDVENDOR }}
 
       - name: Build, tag, and push sendvendor to Amazon ECR
-        id: build-image-disconnect
+        id: build-image-sendvendor
         env:
           AWS_ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           AWS_IMAGE_TAG: ${{ github.sha }}

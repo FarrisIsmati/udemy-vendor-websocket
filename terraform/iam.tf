@@ -40,9 +40,9 @@ resource "aws_iam_role_policy_attachment" "websocket_policy" {
   policy_arn = aws_iam_policy.websocket_sqs_recieve_message.arn
 }
 
-# Policy 2 - Assume Lambda Role
+# Policy 2 - Send cloudfront messages
 resource "aws_iam_role" "lambda_main" {
-  name               = "${var.app_name_generic}-lambda-execution-task-role"
+  name               = "${var.app_name_generic}-lambda-cf"
   assume_role_policy = data.aws_iam_policy_document.lambda_fn_assume_role.json
 }
 
@@ -62,13 +62,12 @@ data "aws_iam_policy_document" "lambda_fn_assume_role" {
   }
 }
 
-# Policy 3 - Allow lambda to write to CloudFront Logs
 resource "aws_iam_role_policy_attachment" "lambda_main" {
   role       = aws_iam_role.lambda_main.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-# Allow websocket clients send message
+# Policy 3 - Allow websocket clients send message
 data "aws_iam_policy_document" "lambda_rw_connection_store" {
   # Send a message to Websocket clients via "execute-api", a component of API Gateway
   statement {
@@ -83,7 +82,7 @@ data "aws_iam_policy_document" "lambda_rw_connection_store" {
 }
 
 resource "aws_iam_policy" "lambda_rw_connection_store" {
-  name   = "${var.lambda_name}"
+  name   = "${var.app_name}-ws-dynamodb"
   policy = data.aws_iam_policy_document.lambda_rw_connection_store.json
 }
 

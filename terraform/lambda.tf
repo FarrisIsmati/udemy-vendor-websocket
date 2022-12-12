@@ -1,5 +1,5 @@
 resource "aws_lambda_function" "connect" {
-  function_name = "${app_name}-connect"
+  function_name = "${var.app_name}-connect"
   handler       = "aws_simple_websocket.handler.handler"
   role          = aws_iam_role.lambda_main.arn
   runtime       = "nodejs16.x"

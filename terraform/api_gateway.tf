@@ -71,9 +71,9 @@ resource "aws_apigatewayv2_stage" "lambda" {
 resource "aws_lambda_permission" "api_gw_main_lambda_main" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.lambda_connect.function_name
+  function_name = aws_lambda_function.connect.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${aws_apigatewayv2_api.main.execution_arn}/*/*"
+  source_arn    = "${aws_apigatewayv2_api.websocket_api_gateway.execution_arn}/*/*"
 }
 
 

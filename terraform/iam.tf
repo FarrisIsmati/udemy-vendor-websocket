@@ -1,4 +1,4 @@
-# API Gateway
+# Policy 1 - Websocket recieve SQS message
 resource "aws_iam_role" "websocket_task_execution_role" {
   name               = "${var.app_name}-execution-task-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
@@ -40,7 +40,7 @@ resource "aws_iam_role_policy_attachment" "websocket_policy" {
   policy_arn = aws_iam_policy.websocket_sqs_recieve_message.arn
 }
 
-# Lambda
+# Policy 2 - Assume Lambda Role
 resource "aws_iam_role" "lambda_main" {
   name               = "${var.app_name_generic}-lambda-execution-task-role"
   assume_role_policy = data.aws_iam_policy_document.lambda_fn_assume_role.json
@@ -62,37 +62,14 @@ data "aws_iam_policy_document" "lambda_fn_assume_role" {
   }
 }
 
-# Allow lambda to write to CloudFront Logs
+# Policy 3 - Allow lambda to write to CloudFront Logs
 resource "aws_iam_role_policy_attachment" "lambda_main" {
   role       = aws_iam_role.lambda_main.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-# These are our permissions, we are using S3 objects to store the state of our Websockets
+# Allow websocket clients send message
 data "aws_iam_policy_document" "lambda_rw_connection_store" {
-  # Create/Read Websocket connection ID objects
-  statement {
-    effect = "Allow"
-    actions = [
-      "s3:GetObject",
-      "s3:PutObject",
-      "s3:DeleteObject"
-    ]
-    resources = [
-      "arn:aws:s3:::${aws_s3_bucket.connection_store.bucket}/${local.connection_store_prefix}/*",
-    ]
-  }
-  # List all of the Websocket connection ID objects
-  statement {
-    effect = "Allow"
-    actions = [
-      "s3:ListBucket",
-    ]
-    resources = [
-      "arn:aws:s3:::${aws_s3_bucket.connection_store.bucket}",
-    ]
-  }
-
   # Send a message to Websocket clients via "execute-api", a component of API Gateway
   statement {
     effect = "Allow"
@@ -114,6 +91,21 @@ resource "aws_iam_role_policy_attachment" "lambda_rw_connection_store" {
   policy_arn = aws_iam_policy.lambda_rw_connection_store.arn
   role       = aws_iam_role.lambda_main.name
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # // IAM Role for lambda
 # resource "aws_iam_role" "lambda_execution" {

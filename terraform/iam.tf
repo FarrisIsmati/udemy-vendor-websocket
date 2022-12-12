@@ -83,7 +83,7 @@ data "aws_iam_policy_document" "lambda_rw_connection_store" {
 }
 
 resource "aws_iam_policy" "lambda_rw_connection_store" {
-  name   = local.app_name_full
+  name   = "${var.lambda_name}"
   policy = data.aws_iam_policy_document.lambda_rw_connection_store.json
 }
 

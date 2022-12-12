@@ -4,9 +4,9 @@ resource "aws_lambda_function" "connect" {
   role          = aws_iam_role.lambda_main.arn
   runtime       = "nodejs12.x"
   timeout       = 10
-  filename      = "${local.account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/connect:${var.image_tag}"
+  image_uri      = "${local.account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/connect:${var.image_tag}"
 
   lifecycle {
-    ignore_changes = [filename]
+    ignore_changes = [image_uri]
   }
 }

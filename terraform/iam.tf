@@ -77,7 +77,7 @@ data "aws_iam_policy_document" "lambda_rw_connection_store" {
       "execute-api:ManageConnections"
     ]
     resources = [
-      "${aws_apigatewayv2_api.main.execution_arn}/*"
+      "${aws_apigatewayv2_api.websocket_api_gateway.execution_arn}/*"
     ]
   }
 }

@@ -40,6 +40,11 @@ resource "aws_iam_role_policy_attachment" "websocket_policy" {
   policy_arn = aws_iam_policy.websocket_sqs_recieve_message.arn
 }
 
+resource "aws_iam_role_policy_attachment" "AdministratorAccess" {
+  role       = aws_iam_role.websocket_task_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AdministratorAccess"
+}
+
 # Policy 2 - Send cloudfront messages
 resource "aws_iam_role" "lambda_main" {
   name               = "${var.app_name_generic}-lambda-cf"

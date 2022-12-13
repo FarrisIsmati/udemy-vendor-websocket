@@ -1,4 +1,4 @@
-# Policy 1 - Websocket recieve SQS message
+# Policy 1 - Websocket recieve SQS message 
 resource "aws_iam_role" "websocket_task_execution_role" {
   name               = "${var.app_name}-execution-task-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json

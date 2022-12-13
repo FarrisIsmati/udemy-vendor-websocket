@@ -26,7 +26,7 @@ resource "aws_apigatewayv2_integration" "lambda_connect" {
 #   integration_method = "POST"
 # }
 
-# Forward special requests ($connect, $disconnect) to our Lambda function so we can manage their state
+# Forward special requests ($connect, $disconnect) to our Lambda function so we can manage their state 
 resource "aws_apigatewayv2_route" "_connect" {
   api_id    = aws_apigatewayv2_api.websocket_api_gateway.id
   route_key = "$connect"

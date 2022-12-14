@@ -12,12 +12,12 @@ resource "aws_apigatewayv2_integration" "lambda_connect" {
   integration_method = "POST"
 }
 
-# resource "aws_apigatewayv2_integration" "lambda_disconnect" {
-#   api_id             = aws_apigatewayv2_api.websocket_api_gateway.id
-#   integration_uri    = aws_lambda_function.disconnect.invoke_arn
-#   integration_type   = "AWS_PROXY"
-#   integration_method = "POST"
-# }
+resource "aws_apigatewayv2_integration" "lambda_disconnect" {
+  api_id             = aws_apigatewayv2_api.websocket_api_gateway.id
+  integration_uri    = aws_lambda_function.disconnect.invoke_arn
+  integration_type   = "AWS_PROXY"
+  integration_method = "POST"
+}
 
 # resource "aws_apigatewayv2_integration" "lambda_sendvendor" {
 #   api_id             = aws_apigatewayv2_api.websocket_api_gateway.id
@@ -33,11 +33,11 @@ resource "aws_apigatewayv2_route" "_connect" {
   target    = "integrations/${aws_apigatewayv2_integration.lambda_connect.id}"
 }
 
-# resource "aws_apigatewayv2_route" "_disconnect" {
-#   api_id    = aws_apigatewayv2_api.websocket_api_gateway.id
-#   route_key = "$disconnect"
-#   target    = "integrations/${aws_apigatewayv2_integration.lambda_disconnect.id}"
-# }
+resource "aws_apigatewayv2_route" "_disconnect" {
+  api_id    = aws_apigatewayv2_api.websocket_api_gateway.id
+  route_key = "$disconnect"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda_disconnect.id}"
+}
 
 # resource "aws_apigatewayv2_route" "_sendvendor" {
 #   api_id    = aws_apigatewayv2_api.websocket_api_gateway.id

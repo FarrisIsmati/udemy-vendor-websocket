@@ -41,7 +41,7 @@ resource "aws_apigatewayv2_route" "_disconnect" {
 
 resource "aws_apigatewayv2_route" "_sendvendor" {
   api_id    = aws_apigatewayv2_api.websocket_api_gateway.id
-  route_key = "$sendvendor"
+  route_key = "sendvendor"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_sendvendor.id}"
 }
 

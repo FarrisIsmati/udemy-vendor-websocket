@@ -5,7 +5,6 @@ resource "aws_lambda_function" "connect" {
   image_uri     = "${local.account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/connect:${var.image_tag}"
   package_type = "Image"
   timeout       = 10
-  runtime       = "nodejs16.x"
 }
 
 resource "aws_lambda_function" "disconnect" {
@@ -15,5 +14,4 @@ resource "aws_lambda_function" "disconnect" {
   image_uri     = "${local.account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/disconnect:${var.image_tag}"
   package_type = "Image"
   timeout       = 10
-  runtime       = "nodejs16.x"
 }

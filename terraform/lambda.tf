@@ -5,6 +5,12 @@ resource "aws_lambda_function" "connect" {
   image_uri     = "${local.account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/connect:${var.image_tag}"
   package_type = "Image"
   timeout       = 30
+  environment {
+    variables = {
+      AWS_TABLE_NAME = "WebSocketConnections"
+      AWS_REGION = "us-east-1"
+    }
+  }
 }
 
 resource "aws_lambda_function" "disconnect" {

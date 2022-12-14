@@ -4,7 +4,7 @@ resource "aws_lambda_function" "connect" {
   role          = aws_iam_role.lambda_main.arn
   image_uri     = "${local.account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/connect:${var.image_tag}"
   package_type = "Image"
-  timeout       = 10
+  timeout       = 30
 }
 
 resource "aws_lambda_function" "disconnect" {
@@ -13,7 +13,7 @@ resource "aws_lambda_function" "disconnect" {
   role          = aws_iam_role.lambda_main.arn
   image_uri     = "${local.account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/disconnect:${var.image_tag}"
   package_type = "Image"
-  timeout       = 10
+  timeout       = 30
 }
 
 resource "aws_lambda_function" "sendvendor" {
@@ -22,5 +22,5 @@ resource "aws_lambda_function" "sendvendor" {
   role          = aws_iam_role.lambda_main.arn
   image_uri     = "${local.account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/sendvendor:${var.image_tag}"
   package_type = "Image"
-  timeout       = 10
+  timeout       = 30
 }

@@ -36,4 +36,10 @@ resource "aws_lambda_function" "sendvendor" {
   image_uri     = "${local.account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/sendvendor:${var.image_tag}"
   package_type = "Image"
   timeout       = 30
+  environment {
+    variables = {
+      AWS_TABLE_NAME = "WebSocketConnections"
+      AWS_REGION_NAME = "us-east-1"
+    }
+  }
 }

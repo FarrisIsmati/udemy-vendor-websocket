@@ -47,3 +47,10 @@ Tech debt: use dynamodb to handle tf state locking (mention that you're not goin
 
 GITHUB REFERENCE FOR LAMBDA/WEBSOCKET
 https://github.com/four43/aws-simple-websocket/tree/master/deployment
+
+
+
+TO TEST THE websocket
+npm i -g wscat
+
+Then run : wscat -c "url"

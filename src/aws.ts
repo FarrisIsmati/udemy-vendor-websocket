@@ -32,7 +32,7 @@ export const dynamoDbRemoveConnection = async (tableName: string, connectionId: 
         const params: AWS.DynamoDB.DeleteItemInput= {
             TableName: tableName,
             Key: {
-                primaryKey: marshall(connectionId)
+                primaryKey: marshall({connectionId: connectionId}),
             }
         };
 

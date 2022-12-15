@@ -68,6 +68,7 @@ resource "aws_apigatewayv2_stage" "lambda" {
 }
 
 # Allow the API Gateway to invoke Lambda function
+# This attaches the trigger on lambda
 resource "aws_lambda_permission" "api_gw_main_lambda_connect" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"

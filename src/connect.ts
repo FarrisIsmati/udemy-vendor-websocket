@@ -5,6 +5,7 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
     const tableName = process.env.AWS_TABLE_NAME ?? '';
     const connectionId = event.requestContext.connectionId ?? '';
     console.log('attempt user:', connectionId)
+    
     const res = await dynamoDbAddConnection(tableName, connectionId);
     if (res instanceof Error) {
         console.log('error', res.message)
@@ -16,7 +17,9 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
             "body" : res.message
         }
     }
+
     console.log('connected!');
+    
     return {
         statusCode: 200,
         body: JSON.stringify({

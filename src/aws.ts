@@ -17,12 +17,33 @@ export const dynamoDbAddConnection = async (tableName: string, connectionId: str
 
         // Call DynamoDB to add connection
         const result = await dynamodb.putItem(params).promise();
-        console.log(`User connected ${connectionId}`);
+
         return result;
     } catch(e) {
         if (e instanceof Error) {
             return e
         }
         return new Error(`dynamoDbAddConnection error object unknown type`);
+    }
+}
+
+export const dynamoDbRemoveConnection = async (tableName: string, connectionId: string) => {
+    try {
+        const params: AWS.DynamoDB.DeleteItemInput= {
+            TableName: tableName,
+            Key: {
+                primaryKey: marshall(connectionId)
+            }
+        };
+
+        // Call DynamoDB to add connection
+        const result = await dynamodb.deleteItem(params).promise();
+
+        return result;
+    } catch(e) {
+        if (e instanceof Error) {
+            return e
+        }
+        return new Error(`dynamoDbRemoveConnection error object unknown type`);
     }
 }

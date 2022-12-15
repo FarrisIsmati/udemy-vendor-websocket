@@ -71,7 +71,7 @@ data "aws_iam_policy_document" "lambda_fn_assume_role" {
 
 # Role 1 - Lambda Role
 resource "aws_iam_role" "lambda_main" {
-  name               = "${var.app_name_generic}-lambda-cf"
+  name               = "${var.app_name_generic}-lambda"
   assume_role_policy = data.aws_iam_policy_document.lambda_fn_assume_role.json 
 }
 
@@ -93,7 +93,8 @@ data "aws_iam_policy_document" "lambda_ws" {
       "dynamodb:GetItem"
     ]
     resources = [
-      "${aws_apigatewayv2_api.websocket_api_gateway.execution_arn}/*"
+      "${aws_apigatewayv2_api.websocket_api_gateway.execution_arn}/*",
+      "arn:aws:dynamodb:${var.aws_region}:${local.account_id}:table/${var.websocket_table_name}"
     ]
   }
 }

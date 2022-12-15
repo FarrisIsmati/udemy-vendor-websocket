@@ -1,4 +1,4 @@
-# Note AWS_REGION is a reserved key that cannot be used so adding _name
+# Note AWS_REGION is a reserved key that cannot be used so adding _name (for env variables)
 resource "aws_lambda_function" "connect" {
   function_name = "${var.app_name}-connect"
   description   = "Websocket connect adds connection data in dynamodb connection table"

@@ -4,10 +4,10 @@ import { dynamoDbAddConnection } from './aws';
 export const handler = async (event: APIGatewayEvent, context: Context): Promise<APIGatewayProxyResult> => {
     const tableName = process.env.AWS_TABLE_NAME ?? '';
     const connectionId = event.requestContext.connectionId ?? '';
-    console.log('user attempting to connect:', connectionId)
+    console.log('attempt user:', connectionId)
     const res = await dynamoDbAddConnection(tableName, connectionId);
     if (res instanceof Error) {
-        console.log('Error', res.message)
+        console.log('error', res.message)
         return {
             "statusCode" : 500,
             "headers" : {
@@ -16,8 +16,7 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
             "body" : res.message
         }
     }
-    console.log('connected');
-
+    console.log('connected!');
     return {
         statusCode: 200,
         body: JSON.stringify({

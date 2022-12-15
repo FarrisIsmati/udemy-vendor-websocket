@@ -2,7 +2,7 @@
 import AWS from 'aws-sdk';
 import { marshall } from "@aws-sdk/util-dynamodb"; // It sets objects to aws dynamodb standard and un sets it
 
-AWS.config.update({region: process.env.AWS_REGION});
+AWS.config.update({region: process.env.AWS_REGION_NAME});
 
 const { DynamoDB } = AWS;
 

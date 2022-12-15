@@ -35,7 +35,7 @@ export const dynamoDbRemoveConnection = async (tableName: string, connectionId: 
                 'KEY_NAME': marshall(connectionId)
             }
         };
-
+        console.log(params)
         // Call DynamoDB to add connection
         const result = await dynamodb.deleteItem(params).promise();
 

@@ -99,7 +99,7 @@ data "aws_iam_policy_document" "lambda_ws" {
 }
 
 resource "aws_iam_policy" "lambda_ws" {
-  name        = "${var.app_name}-ws-dynamodb"
+  name        = "${var.app_name}-lambda_ws"
   description = "Websocket lambda functions can communicate with Dynamodb and api gateway to perform actions"
   policy      = data.aws_iam_policy_document.lambda_ws.json
 }

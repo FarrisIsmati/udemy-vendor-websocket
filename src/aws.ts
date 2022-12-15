@@ -47,3 +47,18 @@ export const dynamoDbRemoveConnection = async (tableName: string, connectionId: 
         return new Error(`dynamoDbAddConnection error object unknown type`);
     }
 }
+
+export const dynamoDbDescribeTable = async (tableName: string) => {
+    try {
+        const table = await dynamodb.describeTable({
+            TableName: tableName
+        }).promise();
+        return table;
+    } catch(e) {
+        // We will return either an error, or throw one if we don't know what type it is
+        if (e instanceof Error) {
+            throw e;
+        }
+        throw new Error(`dynamoDbDescribeTable unexpected error`);
+    }
+}

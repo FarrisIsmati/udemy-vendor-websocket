@@ -32,7 +32,7 @@ export const dynamoDbRemoveConnection = async (tableName: string, connectionId: 
         const params: AWS.DynamoDB.DeleteItemInput= {
             TableName: tableName,
             Key: {
-                primaryKey: marshall({connectionId: connectionId}),
+                'KEY_NAME': marshall(connectionId)
             }
         };
 
@@ -44,6 +44,6 @@ export const dynamoDbRemoveConnection = async (tableName: string, connectionId: 
         if (e instanceof Error) {
             return e
         }
-        return new Error(`dynamoDbRemoveConnection error object unknown type`);
+        return new Error(`dynamoDbAddConnection error object unknown type`);
     }
 }

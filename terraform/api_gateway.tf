@@ -1,3 +1,4 @@
+# Creates the gateway
 resource "aws_apigatewayv2_api" "websocket_api_gateway" {
   name                         = "${var.app_name}"
   description                  = "Send websocket data from twitter service to connected clients"
@@ -5,6 +6,7 @@ resource "aws_apigatewayv2_api" "websocket_api_gateway" {
   route_selection_expression   = "$request.body.action"
 }
 
+# Creates the link between lambda function and gateway
 resource "aws_apigatewayv2_integration" "lambda_connect" {
   api_id             = aws_apigatewayv2_api.websocket_api_gateway.id
   integration_uri    = aws_lambda_function.connect.invoke_arn
@@ -45,11 +47,13 @@ resource "aws_apigatewayv2_route" "_sendvendor" {
   target    = "integrations/${aws_apigatewayv2_integration.lambda_sendvendor.id}"
 }
 
+# Sets up api stage, required to make calls (used to set up where calls can be made dev/qa/prod)
 resource "aws_apigatewayv2_stage" "lambda" {
   api_id      = aws_apigatewayv2_api.websocket_api_gateway.id
   name        = "primary"
   auto_deploy = true
 
+  # Enables logs for aws/apigateway/udemy-vendor-websocket (I DONT THINK THIS IS NECESSARY MIGHT REMOVE)
   access_log_settings {
     destination_arn = aws_cloudwatch_log_group.api_gw.arn
     format = jsonencode({

@@ -1,29 +1,4 @@
-IDK what costs money here
-Not hiding build folder
-
-Step 1
-Docker build 3 images
-
-Step 2
-Terraform send 3 images to ECR
-
-Step 3
-In terraform create a api gateway with websocket protocol
-Route selection expressions $request.body.action 
-
-Step 4
-3 Routes (for each route attach ECR Image from terraform variables as lambda function integration)
-$connect 
-$disconnect 
-$sendmessage
-
-Step 5
-Write 3 TS files that will be a lambda func
-connect - connect to dynamodb add user
-disconnect - delete from dynamodb remove user
-sendMessage - send message to all users?
-
-
+# Docker commands testing locally
 Docker commands
 
 docker build -t connect --target connect .
@@ -38,21 +13,41 @@ curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d
 curl -XPOST "http://localhost:9001/2015-03-31/functions/function/invocations" -d '{}'
 curl -XPOST "http://localhost:9002/2015-03-31/functions/function/invocations" -d '{}'
 
-
-
-Note on terraform state
-Create individual state beforehand for each repo .tfstate file
-Tech debt: use dynamodb to handle tf state locking (mention that you're not going to do this because it's unecessary)
-
-
-GITHUB REFERENCE FOR LAMBDA/WEBSOCKET
-https://github.com/four43/aws-simple-websocket/tree/master/deployment
-
-
-
+# WEBSOCKET COMMAND HELP
 TO TEST THE websocket
 npm i -g wscat
 
 Test connect : wscat -c "url"
 Test disconnect: quitting
 Test a send message by running: {"action":"sendvendor", "data":"Hello world!"}
+
+
+# STEPS WHEN RECORDING
+WEBSOCKET REPO SETUP
+0. High level overview of websockets and how it all will work (real time communication, persist connection state, update all connections)
+1. Create github repo online (setup all actions needed) secrets
+2. .gitignore, .dockerignore, package.json (add dependencies), tsconfig.json (ensure its there) (all core basics)
+3. setup .github/workflows/main.yml file (Keep terraform & ECR/BUILD/PUSH commands commented out) (Talk about changes not including new commented out code)
+
+DOCKERFILE SETUP
+1. Dockerfile (setup dockerifle for connect.ts) (note copy logic we are copying everything including methods we dont need, could split up lambda, use complex copy logic, but I find this suitable given its a small file)
+2. connect.ts (Write and test docker local build commands)
+3. Dockerfile (setup dockerifle for disconnect.ts, send-vendor.ts)
+4. disconnect.ts, send-vendor.ts (Quickly setup code as step 3. but faster let user know we just covered this in detail)
+5. connect.ts (Write main.yml code) (test if updates on ECR)
+6. disconnect.ts, send-vendor.ts (Quickly setup code as step 5. but faster let user know we just covered this in detail)
+
+WEBSOCKET LAMBDA CODE
+1. aws.ts (Copy & paste the 3 methods you previously covered) (talk about changes)
+2. aws.ts (Add broadcastMessage) (talk about what it does)
+3. connect.ts (code meat)
+4. disconnect.ts (code meat)
+5. send-vendor.ts (code meat)
+
+WEBSOCKET TERRAFORM SETUP
+1. main.tf & variables.tf (includes setup on main.yml) (Create no test)
+2. IAM.tf (Create, check if in AWS)
+3. lambda.tf (Create, check if in AWS)
+4. api_gateway.tf (Create, check if in AWS)
+5. Test build (use websocket commands, check AWS)
+6. Troubleshooting (common issues)

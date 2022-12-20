@@ -1,6 +1,6 @@
 import { Context, APIGatewayProxyResult, APIGatewayEvent } from 'aws-lambda';
 import AWS from 'aws-sdk';
-import { dynamoDbScanTable, sendMessageWebsocket } from './aws';
+import { broadcastMessageWebsocket, dynamoDbScanTable } from './aws';
 
 export const handler = async (event: APIGatewayEvent, context: Context): Promise<APIGatewayProxyResult> => {
     const tableName = process.env.AWS_TABLE_NAME ?? '';
@@ -9,32 +9,54 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
         endpoint: event.requestContext.domainName + '/' + event.requestContext.stage
     });
 
-    console.log('scanning table')
-    
-    const res = await dynamoDbScanTable(tableName);
-    if (res instanceof Error) {
-        console.log('error', res.message)
+    if (!event.body) {
         return {
             "statusCode" : 500,
             "headers" : {
                 "content-type": "text/plain; charset=utf-8"
             },
-            "body" : res.message
+            "body" : `event body empty or null ${event.body}`
         }
     }
 
-    const connections = res.Items;
-    console.log(event.requestContext.domainName + '/' + event.requestContext.stage)
-    console.log(connections);
-    // await sendMessageWebsocket(apigwManagementApi)
-    // await apigwManagementApi.postToConnection({ ConnectionId: connectionId, Data: connectionId }).promise();
+    console.log('scanning table')
+    
+    const dbRes = await dynamoDbScanTable(tableName);
+    if (dbRes instanceof Error) {
+        console.log('error', dbRes.message)
+        return {
+            "statusCode" : 500,
+            "headers" : {
+                "content-type": "text/plain; charset=utf-8"
+            },
+            "body" : dbRes.message
+        }
+    }
 
-    // console.log(`Sent message to ${res.Count} users!`);
+    // Future use case how would a user handle broadcasting message to hundreds of thousands + people
+    const broadcastRes = await broadcastMessageWebsocket({
+        apiGatewayManagementApi: apigwManagementApi, 
+        connections: dbRes.Items as AWS.DynamoDB.ItemList, 
+        message: event.body as string,
+        tableName
+    });
+
+    if (broadcastRes instanceof Error) {
+        console.log('error', broadcastRes.message)
+        return {
+            "statusCode" : 500,
+            "headers" : {
+                "content-type": "text/plain; charset=utf-8"
+            },
+            "body" : broadcastRes.message
+        }
+    }
+    console.log(`Sent message ${event.body} to ${dbRes.Count} users!`);
     
     return {
         statusCode: 200,
         body: JSON.stringify({
-            message: `Sent message to ${res.Count} users!`,
+            message: `Sent message to ${dbRes.Count} users!`,
         }),
     };
 };

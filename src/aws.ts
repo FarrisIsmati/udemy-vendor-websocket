@@ -60,7 +60,7 @@ export const dynamoDbScanTable = async (tableName: string) => {
     try {
         const result = await dynamodb.scan(params).promise();
         if (!result.Count) {
-            throw new Error(`dynamoDbScanTable yielded no results`);
+            return new Error(`dynamoDbScanTable yielded no results`);
         }
 
         result.Items = result.Items?.map((item) => unmarshall(item)); // Unmarshall items
@@ -68,29 +68,48 @@ export const dynamoDbScanTable = async (tableName: string) => {
     } catch(e) {
         // We will return either an error, or throw one if we don't know what type it is
         if (e instanceof Error) {
-            throw e
+            return e
         }
-        throw new Error(`dynamoDbScanTable unexpected error`);
+        return new Error(`dynamoDbScanTable unexpected error`);
     }
 }
 
-// Send message
-export const sendMessageWebsocket = async (apiGatewayManagementApi: AWS.ApiGatewayManagementApi, items: any[]) => {
-
-    await apiGatewayManagementApi.postToConnection()
+interface BroadcastMessageWebsocketProps {
+    apiGatewayManagementApi: AWS.ApiGatewayManagementApi, 
+    connections: any[], 
+    message: string,
+    tableName: string,
 }
-// Delete calls if they are stale connection
-// const postCalls = connectionData.Items.map(async ({ CONNECTION_ID }) => {
-//     let connectionId = CONNECTION_ID;
-//     console.log("connectionId " + connectionId);
-//     try {
-//       await apigwManagementApi.postToConnection({ ConnectionId: connectionId, Data: postData }).promise();
-//     } catch (e) {
-//       if (e.statusCode === 410) {
-//         console.log(`Found stale connection, deleting ${connectionId}`);
-//         await ddb.delete({ TableName: TABLE_NAME, Key: { connectionId } }).promise();
-//       } else {
-//         throw e;
-//       }
-//     }
-//   });
+
+// Broadcast message
+export const broadcastMessageWebsocket = async (props: BroadcastMessageWebsocketProps) => {
+    const { apiGatewayManagementApi, connections, message, tableName } = props;
+    const sendVendorsCall = connections?.map(async connection => {
+        const {connectionId} = connection;
+        try {
+            const res = await apiGatewayManagementApi.postToConnection({ ConnectionId: connectionId, Data: message }).promise();
+            return res;
+        } catch (e) { 
+            // Cannot get the type for this in the AWS SDK v2
+            if ((e as any).statusCode === 410) {
+                console.log(`delete stale connection: ${connectionId}`);
+                const removeConnRes = await dynamoDbRemoveConnection(tableName, connectionId);
+                if (removeConnRes instanceof Error) {
+                    return e;
+                }
+            } else {
+                return e;
+            }
+
+        }
+    })
+
+    try {
+        return await Promise.all(sendVendorsCall);
+    } catch (e) {
+        if (e instanceof Error) {
+            return e
+        }
+        return new Error(`broadcastMessageWebsocket error object unknown type`);   
+    }
+}

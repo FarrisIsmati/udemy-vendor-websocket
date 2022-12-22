@@ -53,6 +53,8 @@
 # This is to generate temp credentials to act with the privileges granted by the access policies associated with that role
 # This is so the resource can assume it's role with my temp credentials sts in this case, it can make calls on my behalf
 # Note: you cannot use a normal aws_iam_policy resource for this but can use a data source
+
+# Role 1 - Lambda Role
 data "aws_iam_policy_document" "lambda_fn_assume_role" {
   statement {
     actions = [
@@ -69,7 +71,6 @@ data "aws_iam_policy_document" "lambda_fn_assume_role" {
   }
 }
 
-# Role 1 - Lambda Role
 resource "aws_iam_role" "lambda_main" {
   name               = "${var.app_name_generic}-lambda"
   assume_role_policy = data.aws_iam_policy_document.lambda_fn_assume_role.json 

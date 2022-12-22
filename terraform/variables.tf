@@ -1,3 +1,4 @@
+# Two app names incase one has a variable ending for udemy-vendor
 variable "app_name" {
   type        = string
   description = "Application Name"

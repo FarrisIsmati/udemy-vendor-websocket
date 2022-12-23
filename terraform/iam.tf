@@ -82,7 +82,7 @@ resource "aws_iam_role_policy_attachment" "lambda_main" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-# Policy 2 - Lambda WS & Dynamodb connection
+# Policy 2 - Lambda WS & Dynamodb, & SQS connection
 data "aws_iam_policy_document" "lambda_ws" {
   # Send a message to Websocket clients via "execute-api", a component of API Gateway
   statement {
@@ -93,7 +93,8 @@ data "aws_iam_policy_document" "lambda_ws" {
       "dynamodb:DeleteItem",
       "dynamodb:GetItem",
       "dynamodb:Scan",
-      "sqs:ReceiveMessage"
+      "sqs:ReceiveMessage",
+      "sqs:DeleteMessage"
     ]
     resources = [
       "arn:aws:sqs:${var.aws_region}:${local.account_id}:${var.sqs_queue_name}",

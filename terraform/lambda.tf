@@ -15,7 +15,7 @@ resource "aws_lambda_function" "connect" {
   }
 }
 
-resource "aws_lambda_permission" "api_gw_main_lambda_connect" {
+resource "aws_lambda_permission" "api_gw_main_lambda_connect" { # Provides permission to invoke
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.connect.function_name
@@ -63,6 +63,12 @@ resource "aws_lambda_function" "sendvendor" {
       AWS_REGION_NAME = "us-east-1"
     }
   }
+}
+
+resource "aws_lambda_event_source_mapping" "sendvendor_sqs_trigger" {
+  event_source_arn  = "arn:aws:sqs:${var.aws_region}:${local.account_id}:${var.sqs_queue_name}"
+  function_name     = aws_lambda_function.sendvendor.arn
+  starting_position = "LATEST"
 }
 
 resource "aws_lambda_permission" "sendvendor_sqs_trigger" {

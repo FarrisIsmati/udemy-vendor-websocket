@@ -65,10 +65,10 @@ resource "aws_lambda_function" "sendvendor" {
   }
 }
 
+# Adds trigger
 resource "aws_lambda_event_source_mapping" "sendvendor_sqs_trigger" {
   event_source_arn  = "arn:aws:sqs:${var.aws_region}:${local.account_id}:${var.sqs_queue_name}"
   function_name     = aws_lambda_function.sendvendor.arn
-  starting_position = "LATEST"
 }
 
 resource "aws_lambda_permission" "sendvendor_sqs_trigger" {

@@ -23,6 +23,16 @@ variable "websocket_table_name" {
   default     = "WebSocketConnections"
 }
 
-variable "aws_region" {}
+variable "sqs_queue_name" {
+  type        = string
+  description = "Queue name"
+  default     = "udemy-twitter-queue"
+}
+
+variable "aws_region" {
+    type        = string
+    description = "aws region"
+    default     = "us-east-1"
+}
 
 variable "image_tag" {}

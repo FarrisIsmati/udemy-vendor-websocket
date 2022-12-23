@@ -71,30 +71,4 @@ resource "aws_apigatewayv2_stage" "lambda" {
   }
 }
 
-# Allow the API Gateway to invoke Lambda function
-# This attaches the trigger on lambda
-resource "aws_lambda_permission" "api_gw_main_lambda_connect" {
-  statement_id  = "AllowExecutionFromAPIGateway"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.connect.function_name
-  principal     = "apigateway.amazonaws.com"
-  source_arn    = "${aws_apigatewayv2_api.websocket_api_gateway.execution_arn}/*/*"
-}
-
-resource "aws_lambda_permission" "api_gw_main_lambda_disconnect" {
-  statement_id  = "AllowExecutionFromAPIGateway"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.disconnect.function_name
-  principal     = "apigateway.amazonaws.com"
-  source_arn    = "${aws_apigatewayv2_api.websocket_api_gateway.execution_arn}/*/*"
-}
-
-resource "aws_lambda_permission" "api_gw_main_lambda_sendvendor" {
-  statement_id  = "AllowExecutionFromAPIGateway"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.sendvendor.function_name
-  principal     = "apigateway.amazonaws.com"
-  source_arn    = "${aws_apigatewayv2_api.websocket_api_gateway.execution_arn}/*/*"
-}
-
 

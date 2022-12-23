@@ -92,7 +92,8 @@ data "aws_iam_policy_document" "lambda_ws" {
       "dynamodb:PutItem",
       "dynamodb:DeleteItem",
       "dynamodb:GetItem",
-      "dynamodb:Scan"
+      "dynamodb:Scan",
+      "sqs:ReceiveMessage"
     ]
     resources = [
       "${aws_apigatewayv2_api.websocket_api_gateway.execution_arn}/*",

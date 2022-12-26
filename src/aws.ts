@@ -89,6 +89,7 @@ export const broadcastMessageWebsocket = async (props: BroadcastMessageWebsocket
         const {connectionId} = connection;
         try {
             const res = await apiGatewayManagementApi.postToConnection({ ConnectionId: connectionId, Data: message }).promise();
+            console.log(JSON.stringify(res));
             return res;
         } catch (e) { 
             // Cannot get the type for this in the AWS SDK v2

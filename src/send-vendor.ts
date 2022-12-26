@@ -59,8 +59,6 @@ export const handler = async (event: SQSEvent): Promise<APIGatewayProxyResult> =
     }
     console.log(`Sent message ${message} to ${dbRes.Count} users!`);
     
-
-    // TODO DELETE SQS MESSAGE
     const deleteMessageRes = await sqsDeleteMessage(AWS_SQS_URL, event.Records[0].receiptHandle)
     if (deleteMessageRes instanceof Error) {
         console.log('error', deleteMessageRes.message)

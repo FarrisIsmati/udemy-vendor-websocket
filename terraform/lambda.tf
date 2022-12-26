@@ -62,7 +62,7 @@ resource "aws_lambda_function" "sendvendor" {
       AWS_TABLE_NAME = "WebSocketConnections"
       AWS_REGION_NAME = var.aws_region
       AWS_SQS_URL = "https://sqs.${var.aws_region}.amazonaws.com/${local.account_id}/${var.sqs_queue_name}"
-      AWS_WEBSOCKET_URL = "wss://${aws_apigatewayv2_api.api_id}.execute-api.${var.aws_region}.amazonaws.com/${var.stage_name}"
+      AWS_WEBSOCKET_URL = "${aws_apigatewayv2_api.websocket_api_gateway.api_endpoint}/${var.api_gateway_stage_name}"
     }
   }
 }

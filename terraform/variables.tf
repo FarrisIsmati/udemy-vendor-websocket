@@ -35,4 +35,10 @@ variable "aws_region" {
     default     = "us-east-1"
 }
 
+variable "api_gateway_stage_name" {
+    type        = string
+    description = "dev stagename (could add more)"
+    default     = "primary"
+}
+
 variable "image_tag" {}

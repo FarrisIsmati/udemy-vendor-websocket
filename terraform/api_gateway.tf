@@ -48,9 +48,9 @@ resource "aws_apigatewayv2_route" "_sendvendor" {
 }
 
 # Sets up api stage, required to make calls (used to set up where calls can be made dev/qa/prod)
-resource "aws_apigatewayv2_stage" "lambda" {
+resource "aws_apigatewayv2_stage" "main" {
   api_id      = aws_apigatewayv2_api.websocket_api_gateway.id
-  name        = "primary"
+  name        = var.api_gateway_stage_name
   auto_deploy = true
 
   # Enables logs for aws/apigateway/udemy-vendor-websocket (I DONT THINK THIS IS NECESSARY MIGHT REMOVE)

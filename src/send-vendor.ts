@@ -47,6 +47,7 @@ export const handler = async (event: SQSEvent): Promise<APIGatewayProxyResult> =
         message: message,
         tableName: TABLE_NAME
     });
+    console.log(broadcastRes)
     if (broadcastRes instanceof Error) {
         console.log('error', broadcastRes.message)
         return {

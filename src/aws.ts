@@ -87,6 +87,7 @@ export const broadcastMessageWebsocket = async (props: BroadcastMessageWebsocket
     const { apiGatewayManagementApi, connections, message, tableName } = props;
     const sendVendorsCall = connections?.map(async connection => {
         const {connectionId} = connection;
+        console.log('dont be sweet', connectionId)
         try {
             const res = await apiGatewayManagementApi.postToConnection({ ConnectionId: connectionId, Data: message }).promise();
             console.log(JSON.stringify(res));
@@ -107,8 +108,10 @@ export const broadcastMessageWebsocket = async (props: BroadcastMessageWebsocket
     })
 
     try {
-        return await Promise.all(sendVendorsCall);
+        const res = await Promise.all(sendVendorsCall);
+        return res;
     } catch (e) {
+        console.log('TESTING ERROR')
         if (e instanceof Error) {
             return e
         }

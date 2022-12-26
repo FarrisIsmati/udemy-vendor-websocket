@@ -4,9 +4,10 @@ import { marshall, unmarshall } from "@aws-sdk/util-dynamodb"; // It sets object
 
 AWS.config.update({region: process.env.AWS_REGION_NAME});
 
-const { DynamoDB, ApiGatewayManagementApi } = AWS;
+const { DynamoDB, SQS } = AWS;
 
 const dynamodb = new DynamoDB();
+const sqs = new SQS();
 
 // Add connection to db
 export const dynamoDbAddConnection = async (tableName: string, connectionId: string) => {
@@ -111,5 +112,24 @@ export const broadcastMessageWebsocket = async (props: BroadcastMessageWebsocket
             return e
         }
         return new Error(`broadcastMessageWebsocket error object unknown type`);   
+    }
+}
+
+// Delete message
+export const sqsDeleteMessage = async (queueUrl: string, receiptHandle: string) => {
+    try {
+        const params: AWS.SQS.DeleteMessageRequest = {
+            ReceiptHandle: receiptHandle,
+            QueueUrl: queueUrl,
+        }
+
+        const result = await sqs.deleteMessage(params).promise();
+        console.log('Message deleted!');
+        return result;
+    } catch(e) {
+        if (e instanceof Error) {
+            return e
+        }
+        return new Error(`sqsDeleteMessage error object unknown type`);
     }
 }

@@ -94,7 +94,8 @@ data "aws_iam_policy_document" "lambda_ws" {
       "dynamodb:GetItem",
       "dynamodb:Scan",
       "sqs:ReceiveMessage",
-      "sqs:DeleteMessage"
+      "sqs:DeleteMessage",
+      "sqs:GetQueueAttributes"
     ]
     resources = [
       "arn:aws:sqs:${var.aws_region}:${local.account_id}:${var.sqs_queue_name}",

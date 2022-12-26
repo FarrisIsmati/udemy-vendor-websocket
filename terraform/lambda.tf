@@ -61,6 +61,7 @@ resource "aws_lambda_function" "sendvendor" {
     variables = {
       AWS_TABLE_NAME = "WebSocketConnections"
       AWS_REGION_NAME = "us-east-1"
+      AWS_SQS_URL = "https://sqs.${var.aws_region}.amazonaws.com/${local.account_id}/${var.sqs_queue_name}"
     }
   }
 }

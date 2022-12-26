@@ -1,8 +1,15 @@
 import { Context, APIGatewayProxyResult, APIGatewayEvent } from 'aws-lambda';
 import AWS from 'aws-sdk';
-import { broadcastMessageWebsocket, dynamoDbScanTable } from './aws';
+import { broadcastMessageWebsocket, dynamoDbScanTable, sqsDeleteMessage } from './aws';
+
+// env
+const AWS_SQS_URL = process.env.AWS_SQS_URL ?? '';
 
 export const handler = async (event: APIGatewayEvent, context: Context): Promise<APIGatewayProxyResult> => {
+    console.log(JSON.stringify(event))
+    console.log(JSON.stringify(context))
+    console.log('---')
+
     const tableName = process.env.AWS_TABLE_NAME ?? '';
     const apigwManagementApi = new AWS.ApiGatewayManagementApi({
         apiVersion: '2018-11-29',
@@ -40,7 +47,6 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
         message: event.body as string,
         tableName
     });
-
     if (broadcastRes instanceof Error) {
         console.log('error', broadcastRes.message)
         return {
@@ -53,6 +59,20 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
     }
     console.log(`Sent message ${event.body} to ${dbRes.Count} users!`);
     
+
+    // TODO DELETE SQS MESSAGE
+    const deleteMessageRes = await sqsDeleteMessage(AWS_SQS_URL, event.body)
+    if (deleteMessageRes instanceof Error) {
+        console.log('error', deleteMessageRes.message)
+        return {
+            "statusCode" : 500,
+            "headers" : {
+                "content-type": "text/plain; charset=utf-8"
+            },
+            "body" : deleteMessageRes.message
+        }
+    }
+
     return {
         statusCode: 200,
         body: JSON.stringify({

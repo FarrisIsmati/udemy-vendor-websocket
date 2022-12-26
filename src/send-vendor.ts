@@ -1,34 +1,34 @@
-import { Context, APIGatewayProxyResult, APIGatewayEvent } from 'aws-lambda';
+import { APIGatewayProxyResult, SQSEvent } from 'aws-lambda';
 import AWS from 'aws-sdk';
 import { broadcastMessageWebsocket, dynamoDbScanTable, sqsDeleteMessage } from './aws';
 
 // env
 const AWS_SQS_URL = process.env.AWS_SQS_URL ?? '';
+const AWS_WEBSOCKET_URL = process.env.AWS_WEBSOCKET_URL ?? '';
+const TABLE_NAME = process.env.AWS_TABLE_NAME ?? '';
 
-export const handler = async (event: APIGatewayEvent, context: Context): Promise<APIGatewayProxyResult> => {
-    console.log(JSON.stringify(event))
-    console.log(JSON.stringify(context))
-    console.log('---')
-
-    const tableName = process.env.AWS_TABLE_NAME ?? '';
-    const apigwManagementApi = new AWS.ApiGatewayManagementApi({
+// APIGatewayEvent | 
+export const handler = async (event: SQSEvent): Promise<APIGatewayProxyResult> => {
+     const apigwManagementApi = new AWS.ApiGatewayManagementApi({
         apiVersion: '2018-11-29',
-        endpoint: event.requestContext.domainName + '/' + event.requestContext.stage
+        endpoint: AWS_WEBSOCKET_URL
     });
 
-    if (!event.body) {
+    const message = event.Records[0].body;
+
+    if (!message) {
         return {
             "statusCode" : 500,
             "headers" : {
                 "content-type": "text/plain; charset=utf-8"
             },
-            "body" : `event body empty or null ${event.body}`
+            "body" : `event message empty or null ${message}`
         }
     }
 
     console.log('scanning table')
     
-    const dbRes = await dynamoDbScanTable(tableName);
+    const dbRes = await dynamoDbScanTable(TABLE_NAME);
     if (dbRes instanceof Error) {
         console.log('error', dbRes.message)
         return {
@@ -44,8 +44,8 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
     const broadcastRes = await broadcastMessageWebsocket({
         apiGatewayManagementApi: apigwManagementApi, 
         connections: dbRes.Items as AWS.DynamoDB.ItemList, 
-        message: event.body as string,
-        tableName
+        message: message,
+        tableName: TABLE_NAME
     });
     if (broadcastRes instanceof Error) {
         console.log('error', broadcastRes.message)
@@ -57,11 +57,11 @@ export const handler = async (event: APIGatewayEvent, context: Context): Promise
             "body" : broadcastRes.message
         }
     }
-    console.log(`Sent message ${event.body} to ${dbRes.Count} users!`);
+    console.log(`Sent message ${message} to ${dbRes.Count} users!`);
     
 
     // TODO DELETE SQS MESSAGE
-    const deleteMessageRes = await sqsDeleteMessage(AWS_SQS_URL, event.body)
+    const deleteMessageRes = await sqsDeleteMessage(AWS_SQS_URL, event.Records[0].receiptHandle)
     if (deleteMessageRes instanceof Error) {
         console.log('error', deleteMessageRes.message)
         return {

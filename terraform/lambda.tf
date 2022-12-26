@@ -60,8 +60,9 @@ resource "aws_lambda_function" "sendvendor" {
   environment {
     variables = {
       AWS_TABLE_NAME = "WebSocketConnections"
-      AWS_REGION_NAME = "us-east-1"
+      AWS_REGION_NAME = var.aws_region
       AWS_SQS_URL = "https://sqs.${var.aws_region}.amazonaws.com/${local.account_id}/${var.sqs_queue_name}"
+      AWS_WEBSOCKET_URL = "wss://${aws_apigatewayv2_api.api_id}.execute-api.${var.aws_region}.amazonaws.com/${var.stage_name}"
     }
   }
 }
@@ -80,10 +81,11 @@ resource "aws_lambda_permission" "sendvendor_sqs_trigger" {
   source_arn    = "arn:aws:sqs:${var.aws_region}:${local.account_id}:${var.sqs_queue_name}"
 }
 
-resource "aws_lambda_permission" "api_gw_main_lambda_sendvendor" {
-  statement_id  = "AllowExecutionFromAPIGateway"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.sendvendor.function_name
-  principal     = "apigateway.amazonaws.com"
-  source_arn    = "${aws_apigatewayv2_api.websocket_api_gateway.execution_arn}/*/*"
-}
+# # NO NEED FOR WEBSOCKET TRIGGER BECAUSE IT SHOULD ONLY BE TRIGGERED BY SQS MESSAGE 
+# resource "aws_lambda_permission" "api_gw_main_lambda_sendvendor" {
+#   statement_id  = "AllowExecutionFromAPIGateway"
+#   action        = "lambda:InvokeFunction"
+#   function_name = aws_lambda_function.sendvendor.function_name
+#   principal     = "apigateway.amazonaws.com"
+#   source_arn    = "${aws_apigatewayv2_api.websocket_api_gateway.execution_arn}/*/*"
+# }

@@ -89,6 +89,7 @@ export const broadcastMessageWebsocket = async (props: BroadcastMessageWebsocket
         const {connectionId} = connection;
         console.log('dont be sweet', connectionId);
         try {
+            console.log('Da endpoint', apiGatewayManagementApi.endpoint)
             const res = await apiGatewayManagementApi.postToConnection({ ConnectionId: connectionId, Data: message }).promise();
             console.log(JSON.stringify(res));
             return res;

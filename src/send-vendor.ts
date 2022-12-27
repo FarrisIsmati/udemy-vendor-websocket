@@ -14,7 +14,7 @@ export const handler = async (event: SQSEvent): Promise<APIGatewayProxyResult> =
     // THE URL IS MESSED UP?
      const apigwManagementApi = new AWS.ApiGatewayManagementApi({
         apiVersion: '2018-11-29',
-        endpoint: AWS_WEBSOCKET_URL
+        endpoint: new AWS.Endpoint(AWS_WEBSOCKET_URL)
     });
     console.log(apigwManagementApi)
     const message = event.Records[0].body;

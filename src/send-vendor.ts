@@ -9,11 +9,14 @@ const TABLE_NAME = process.env.AWS_TABLE_NAME ?? '';
 
 // APIGatewayEvent | 
 export const handler = async (event: SQSEvent): Promise<APIGatewayProxyResult> => {
+    console.log('websocket url', AWS_WEBSOCKET_URL);
+
+    // THE URL IS MESSED UP?
      const apigwManagementApi = new AWS.ApiGatewayManagementApi({
         apiVersion: '2018-11-29',
         endpoint: AWS_WEBSOCKET_URL
     });
-
+    console.log(apigwManagementApi)
     const message = event.Records[0].body;
 
     if (!message) {

@@ -9,11 +9,11 @@ const TABLE_NAME = process.env.AWS_TABLE_NAME ?? '';
 
 // APIGatewayEvent | 
 export const handler = async (event: SQSEvent): Promise<APIGatewayProxyResult> => {
-    const endpoint = AWS_WEBSOCKET_URL
-    console.log('URL', endpoint)
+    // Endpoint needs to remove the wss:// from url
+    const endpoint = new URL(AWS_WEBSOCKET_URL);
     const apigwManagementApi = new AWS.ApiGatewayManagementApi({
         apiVersion: '2018-11-29',
-        endpoint
+        endpoint: endpoint.hostname + endpoint.pathname
     });
     console.log(apigwManagementApi)
     const message = event.Records[0].body;

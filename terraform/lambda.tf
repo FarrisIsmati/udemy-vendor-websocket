@@ -82,10 +82,10 @@ resource "aws_lambda_permission" "sendvendor_sqs_trigger" {
 }
 
 # # NO NEED FOR WEBSOCKET TRIGGER BECAUSE IT SHOULD ONLY BE TRIGGERED BY SQS MESSAGE 
-resource "aws_lambda_permission" "api_gw_main_lambda_sendvendor" {
-  statement_id  = "AllowExecutionFromAPIGateway"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.sendvendor.function_name
-  principal     = "apigateway.amazonaws.com"
-  source_arn    = "${aws_apigatewayv2_api.websocket_api_gateway.execution_arn}/*/*"
-}
+# resource "aws_lambda_permission" "api_gw_main_lambda_sendvendor" {
+#   statement_id  = "AllowExecutionFromAPIGateway"
+#   action        = "lambda:InvokeFunction"
+#   function_name = aws_lambda_function.sendvendor.function_name
+#   principal     = "apigateway.amazonaws.com"
+#   source_arn    = "${aws_apigatewayv2_api.websocket_api_gateway.execution_arn}/*/*"
+# }

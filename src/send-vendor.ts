@@ -7,7 +7,6 @@ const AWS_SQS_URL = process.env.AWS_SQS_URL ?? '';
 const AWS_WEBSOCKET_URL = process.env.AWS_WEBSOCKET_URL ?? '';
 const TABLE_NAME = process.env.AWS_TABLE_NAME ?? '';
 
-// APIGatewayEvent | 
 export const handler = async (event: SQSEvent): Promise<APIGatewayProxyResult> => {
     // Endpoint needs to remove the wss:// from url
     const endpoint = new URL(AWS_WEBSOCKET_URL);
@@ -15,7 +14,7 @@ export const handler = async (event: SQSEvent): Promise<APIGatewayProxyResult> =
         apiVersion: '2018-11-29',
         endpoint: endpoint.hostname + endpoint.pathname
     });
-    console.log(apigwManagementApi)
+
     const message = event.Records[0].body;
 
     if (!message) {
@@ -29,7 +28,6 @@ export const handler = async (event: SQSEvent): Promise<APIGatewayProxyResult> =
     }
 
     console.log('scanning table')
-    
     const dbRes = await dynamoDbScanTable(TABLE_NAME);
     if (dbRes instanceof Error) {
         console.log('error', dbRes.message)
@@ -49,7 +47,6 @@ export const handler = async (event: SQSEvent): Promise<APIGatewayProxyResult> =
         message: message,
         tableName: TABLE_NAME
     });
-    console.log(broadcastRes)
     if (broadcastRes instanceof Error) {
         console.log('error', broadcastRes.message)
         return {

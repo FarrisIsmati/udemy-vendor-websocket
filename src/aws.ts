@@ -38,7 +38,6 @@ export const dynamoDbRemoveConnection = async (tableName: string, connectionId: 
                 'connectionId': marshall(connectionId)
             }
         };
-        console.log(params)
         // Call DynamoDB to add connection
         const result = await dynamodb.deleteItem(params).promise();
 
@@ -87,13 +86,8 @@ export const broadcastMessageWebsocket = async (props: BroadcastMessageWebsocket
     const { apiGatewayManagementApi, connections, message, tableName } = props;
     const sendVendorsCall = connections?.map(async connection => {
         const {connectionId} = connection;
-        console.log('dont be sweet', connectionId);
         try {
-            console.log('Da endpoint', apiGatewayManagementApi.endpoint)
-            const res = await apiGatewayManagementApi.postToConnection({ ConnectionId: connectionId, Data: message }).promise();
-            console.log(res);
-            console.log(JSON.stringify(res));
-            return res;
+            await apiGatewayManagementApi.postToConnection({ ConnectionId: connectionId, Data: message }).promise();
         } catch (e) { 
             // Cannot get the type for this in the AWS SDK v2
             if ((e as any).statusCode === 410) {
@@ -113,7 +107,6 @@ export const broadcastMessageWebsocket = async (props: BroadcastMessageWebsocket
         const res = await Promise.all(sendVendorsCall);
         return res;
     } catch (e) {
-        console.log('TESTING ERROR')
         if (e instanceof Error) {
             return e
         }

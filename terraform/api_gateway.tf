@@ -53,22 +53,22 @@ resource "aws_apigatewayv2_stage" "main" {
   name        = var.api_gateway_stage_name
   auto_deploy = true
 
-  # # Enables logs for aws/apigateway/udemy-vendor-websocket (I DONT THINK THIS IS NECESSARY MIGHT REMOVE)
-  # access_log_settings {
-  #   destination_arn = aws_cloudwatch_log_group.api_gw.arn
-  #   format = jsonencode({
-  #     requestId               = "$context.requestId"
-  #     sourceIp                = "$context.identity.sourceIp"
-  #     requestTime             = "$context.requestTime"
-  #     protocol                = "$context.protocol"
-  #     httpMethod              = "$context.httpMethod"
-  #     resourcePath            = "$context.resourcePath"
-  #     routeKey                = "$context.routeKey"
-  #     status                  = "$context.status"
-  #     responseLength          = "$context.responseLength"
-  #     integrationErrorMessage = "$context.integrationErrorMessage"
-  #   })
-  # }
+  # Enables logs for aws/apigateway/udemy-vendor-websocket (I DONT THINK THIS IS NECESSARY MIGHT REMOVE)
+  access_log_settings {
+    destination_arn = aws_cloudwatch_log_group.api_gw.arn
+    format = jsonencode({
+      requestId               = "$context.requestId"
+      sourceIp                = "$context.identity.sourceIp"
+      requestTime             = "$context.requestTime"
+      protocol                = "$context.protocol"
+      httpMethod              = "$context.httpMethod"
+      resourcePath            = "$context.resourcePath"
+      routeKey                = "$context.routeKey"
+      status                  = "$context.status"
+      responseLength          = "$context.responseLength"
+      integrationErrorMessage = "$context.integrationErrorMessage"
+    })
+  }
 }
 
 
@@ -115,22 +115,22 @@ resource "aws_apigatewayv2_stage" "http_main" {
   name        = var.api_gateway_stage_name
   auto_deploy = true
 
-  # # Enables logs for aws/apigateway/udemy-vendor-websocket (I DONT THINK THIS IS NECESSARY MIGHT REMOVE)
-  # access_log_settings {
-  #   destination_arn = aws_cloudwatch_log_group.api_gw.arn
-  #   format = jsonencode({
-  #     requestId               = "$context.requestId"
-  #     sourceIp                = "$context.identity.sourceIp"
-  #     requestTime             = "$context.requestTime"
-  #     protocol                = "$context.protocol"
-  #     httpMethod              = "$context.httpMethod"
-  #     resourcePath            = "$context.resourcePath"
-  #     routeKey                = "$context.routeKey"
-  #     status                  = "$context.status"
-  #     responseLength          = "$context.responseLength"
-  #     integrationErrorMessage = "$context.integrationErrorMessage"
-  #   })
-  # }
+  # Enables logs for aws/apigateway/udemy-vendor-websocket (I DONT THINK THIS IS NECESSARY MIGHT REMOVE)
+  access_log_settings {
+    destination_arn = aws_cloudwatch_log_group.api_gw_http.arn
+    format = jsonencode({
+      requestId               = "$context.requestId"
+      sourceIp                = "$context.identity.sourceIp"
+      requestTime             = "$context.requestTime"
+      protocol                = "$context.protocol"
+      httpMethod              = "$context.httpMethod"
+      resourcePath            = "$context.resourcePath"
+      routeKey                = "$context.routeKey"
+      status                  = "$context.status"
+      responseLength          = "$context.responseLength"
+      integrationErrorMessage = "$context.integrationErrorMessage"
+    })
+  }
 }
 
 

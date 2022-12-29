@@ -99,13 +99,13 @@ resource "aws_apigatewayv2_integration" "lambda_getvendors" {
   api_id             = aws_apigatewayv2_api.http_api_gateway.id
   integration_uri    = aws_lambda_function.getvendors.invoke_arn
   integration_type   = "AWS_PROXY"
-  integration_method = "GET"
+  integration_method = "POST"
 }
 
 # Forward special requests ($connect, $disconnect) to our Lambda function so we can manage their state 
 resource "aws_apigatewayv2_route" "_getvendors" {
   api_id    = aws_apigatewayv2_api.http_api_gateway.id
-  route_key = "getvendors"
+  route_key = "GET /vendors"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_getvendors.id}"
 }
 

@@ -81,6 +81,23 @@ jobs:
           docker push $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_TAG
           echo "::set-output name=image::$AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_TAG"
 
+      - name: Build getvendors ECR
+        uses: int128/create-ecr-repository-action@v1
+        id: getvendors-ecr
+        with:
+          repository: getvendors
+
+      - name: Build, tag, and push getvendors image to Amazon ECR
+        id: build-image-getvendors
+        env:
+          AWS_ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          AWS_IMAGE_TAG: ${{ github.sha }}
+          AWS_ECR_REPOSITORY: getvendors
+        run: |
+          docker build -t $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_TAG --target $AWS_ECR_REPOSITORY .
+          docker push $AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_TAG
+          echo "::set-output name=image::$AWS_ECR_REGISTRY/$AWS_ECR_REPOSITORY:$AWS_IMAGE_TAG"
+
       - name: Setup Terraform 
         uses: hashicorp/setup-terraform@v2
         with:

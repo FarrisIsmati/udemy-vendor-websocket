@@ -78,7 +78,7 @@ export const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyRe
     return {
         statusCode: 200,
         body: JSON.stringify({
-            message: `Sent message to ${dbRes.Count} users!`,
+            // message: `Sent message to ${dbRes.Count} users!`,
         }),
     };
 };

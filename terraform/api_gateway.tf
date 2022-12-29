@@ -92,7 +92,6 @@ resource "aws_apigatewayv2_api" "http_api_gateway" {
   name                         = "${var.app_name}"
   description                  = "Send vendor data to connected clients"
   protocol_type                = "HTTP"
-  route_selection_expression   = "$request.body.action"
 }
 
 # Creates the link between lambda function and gateway

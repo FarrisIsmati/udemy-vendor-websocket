@@ -50,27 +50,91 @@ export const dynamoDbRemoveConnection = async (tableName: string, connectionId: 
     }
 }
 
-// Scan entire table for all connection ids
-export const dynamoDbScanTable = async (tableName: string) => {
-    const params: AWS.DynamoDB.ScanInput = {
-        "TableName": tableName,
-        "ProjectionExpression": 'connectionId'
-    };
-
+// Get table metadata 
+export const dynamoDbDescribeTable = async (tableName: string) => {
     try {
-        const result = await dynamodb.scan(params).promise();
-        if (!result.Count) {
-            return new Error(`dynamoDbScanTable yielded no results`);
-        }
-
-        result.Items = result.Items?.map((item) => unmarshall(item)); // Unmarshall items
-        return result
+        const table = await dynamodb.describeTable({
+            TableName: tableName
+        }).promise();
+        console.log('Table retrieved', table);
+        return table;
     } catch(e) {
         // We will return either an error, or throw one if we don't know what type it is
         if (e instanceof Error) {
-            return e
+            throw e;
         }
-        return new Error(`dynamoDbScanTable unexpected error`);
+        throw new Error(`dynamoDbDescribeTable unexpected error`);
+    }
+}
+
+// Scan entire table
+// Option this time to handle pagination
+export const dynamoDbScanTable = async function* (tableName: string, limit: number = 25, lastEvaluatedKey?: AWS.DynamoDB.Key){
+    while (true) {
+        const params: AWS.DynamoDB.ScanInput = {
+            "TableName": tableName,
+            "Limit": limit,
+        };
+
+        if (lastEvaluatedKey) {
+            params.ExclusiveStartKey = lastEvaluatedKey;
+        }
+
+        try {
+            const result = await dynamodb.scan(params).promise();
+            if (!result.Count) {
+                return;
+            }
+
+            lastEvaluatedKey = (result as AWS.DynamoDB.ScanOutput).LastEvaluatedKey;
+            result.Items = result.Items?.map((item) => unmarshall(item)); // Unmarshall items
+            yield result;
+        } catch(e) {
+            // We will return either an error, or throw one if we don't know what type it is
+            if (e instanceof Error) {
+                throw e
+            }
+            throw new Error(`dynamoDbScanTable unexpected error`);
+        }
+    }
+}
+
+// Puts all items into an object (note if scalability is an issue we would limit results, and call this over multiple processes)
+// Not the case here so no need to get too complicated just get it all
+// Pagination might be in a future video, you can set it up yourself my reading docs or other tutorial videos
+export const getAllScanResults = async <T>(tableName: string, limit: number = 25) => {
+    try {
+        // See if table exists, else throw an error
+        await dynamoDbDescribeTable(tableName);
+
+        const scanTableGen = await dynamoDbScanTable(tableName, limit);
+
+        const results: T[] = [];
+        let isDone = false;
+    
+        while(!isDone) {
+            const iterator = await scanTableGen.next();
+    
+            if (!iterator) {
+                throw new Error('No iterator returned')
+            }
+    
+            if (iterator.done) {
+                isDone = iterator.done;
+            }
+    
+            if (iterator.value) {
+                iterator.value.Items!.map((result:any) => results.push(result))
+            }
+        }
+    
+        return results;
+    } catch(e) {
+        if (e instanceof Error) {
+            throw e
+        }
+
+        throw new Error(`getAllScanResults unexpected error`);
     }
 }
 

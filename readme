@@ -23,7 +23,7 @@ Test a send message by running: {"action":"sendvendor", "data":"Hello world!"}
 
 
 # STEPS WHEN RECORDING
-WEBSOCKET REPO SETUP
+GATEWAY REPO SETUP #ENSURE YOU RENAME ALL OF THIS TO GATEWAY BECAUSE IT CONTAINS BOTH WEBSOCKET AND HTTP PROTOCOLS
 0. High level overview of websockets and how it all will work (real time communication, persist connection state, update all connections)
 1. Create github repo online (setup all actions needed) secrets
 2. .gitignore, .dockerignore, package.json (add dependencies), tsconfig.json (ensure its there) (all core basics)
@@ -36,6 +36,7 @@ DOCKERFILE SETUP
 4. disconnect.ts, send-vendor.ts (Quickly setup code as step 3. but faster let user know we just covered this in detail)
 5. connect.ts (Write main.yml code) (test if updates on ECR)
 6. disconnect.ts, send-vendor.ts (Quickly setup code as step 5. but faster let user know we just covered this in detail)
+8. GET VENDOR
 
 WEBSOCKET LAMBDA CODE
 1. aws.ts (Copy & paste the 3 methods you previously covered) (talk about changes)
@@ -43,6 +44,7 @@ WEBSOCKET LAMBDA CODE
 3. connect.ts (code meat)
 4. disconnect.ts (code meat)
 5. send-vendor.ts (code meat)
+8. GET VENDOR
 
 WEBSOCKET TERRAFORM SETUP
 1. main.tf & variables.tf (includes setup on main.yml) (Create no test)

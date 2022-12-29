@@ -1,21 +1,20 @@
-import { APIGatewayProxyResult, SQSEvent } from 'aws-lambda';
+import { APIGatewayEvent, APIGatewayProxyResult, SQSEvent } from 'aws-lambda';
 import AWS from 'aws-sdk';
-import { broadcastMessageWebsocket, dynamoDbScanTable, getAllScanResults, sqsDeleteMessage } from './aws';
+import { broadcastMessageWebsocket, dynamoDbScanTable, sqsDeleteMessage } from './aws';
 
 // env
-const AWS_SQS_URL = process.env.AWS_SQS_URL ?? '';
-const AWS_WEBSOCKET_URL = process.env.AWS_WEBSOCKET_URL ?? '';
+const AWS_HTTP_URL = process.env.AWS_HTTP_URL ?? '';
 const TABLE_NAME = process.env.AWS_TABLE_NAME ?? '';
 
-export const handler = async (event: SQSEvent): Promise<APIGatewayProxyResult> => {
-    // Endpoint needs to remove the wss:// from url
-    const endpoint = new URL(AWS_WEBSOCKET_URL);
+export const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
+    // Endpoint needs to remove the http:// from url
+    const endpoint = new URL(AWS_HTTP_URL);
     const apigwManagementApi = new AWS.ApiGatewayManagementApi({
         apiVersion: '2018-11-29',
         endpoint: endpoint.hostname + endpoint.pathname
     });
 
-    const message = event.Records[0].body;
+    const message = event.body;
 
     if (!message) {
         return {
@@ -28,7 +27,7 @@ export const handler = async (event: SQSEvent): Promise<APIGatewayProxyResult> =
     }
 
     console.log('scanning table')
-    const dbRes = await getAllScanResults<AWS.DynamoDB.ScanOutput>(TABLE_NAME);
+    const dbRes = await dynamoDbScanTable(TABLE_NAME);
     if (dbRes instanceof Error) {
         console.log('error', dbRes.message)
         return {
@@ -40,9 +39,11 @@ export const handler = async (event: SQSEvent): Promise<APIGatewayProxyResult> =
         }
     }
 
-    console.log('DB RES');
-    console.log(JSON.stringify(dbRes));
+    console.log('stringed event');
+    console.log(JSON.stringify(event));
 
+    console.log('dbRes!');
+    console.log(JSON.stringify(dbRes));
     // // Future use case how would a user handle broadcasting message to hundreds of thousands + people
     // const broadcastRes = await broadcastMessageWebsocket({
     //     apiGatewayManagementApi: apigwManagementApi, 
@@ -77,7 +78,7 @@ export const handler = async (event: SQSEvent): Promise<APIGatewayProxyResult> =
     return {
         statusCode: 200,
         body: JSON.stringify({
-            // message: `Sent message to ${dbRes.Count} users!`,
+            message: `Sent message to ${dbRes.Count} users!`,
         }),
     };
 };

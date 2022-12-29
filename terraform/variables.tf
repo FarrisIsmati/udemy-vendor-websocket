@@ -41,4 +41,9 @@ variable "api_gateway_stage_name" {
     default     = "primary"
 }
 
+variable "dynamodb_vendor_table_name" {
+  description = "Table name for dynamodb vendors"
+  default = "Vendors"
+}
+
 variable "image_tag" {}

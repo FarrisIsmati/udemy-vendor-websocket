@@ -39,7 +39,6 @@ resource "aws_lambda_function" "disconnect" {
   }
 }
 
-
 resource "aws_lambda_permission" "api_gw_main_lambda_disconnect" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
@@ -89,3 +88,28 @@ resource "aws_lambda_permission" "sendvendor_sqs_trigger" {
 #   principal     = "apigateway.amazonaws.com"
 #   source_arn    = "${aws_apigatewayv2_api.websocket_api_gateway.execution_arn}/*/*"
 # }
+
+# Lambda get vendors
+resource "aws_lambda_function" "getvendors" {
+  function_name = "${var.app_name}-getvendors"
+  description   = "Gets all vendors"
+  role          = aws_iam_role.lambda_main.arn
+  image_uri     = "${local.account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/getvendors:${var.image_tag}"
+  package_type = "Image"
+  timeout       = 30
+  environment {
+    variables = {
+      AWS_TABLE_NAME = var.dynamodb_vendor_table_name
+      AWS_REGION_NAME = var.aws_region
+      AWS_HTTP_URL = "${aws_apigatewayv2_api.websocket_api_gateway.api_endpoint}/${var.api_gateway_stage_name}"
+    }
+  }
+}
+
+resource "aws_lambda_permission" "api_gw_http_main_lambda_get_vendors" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.getvendors.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.http_api_gateway.execution_arn}/*/*"
+}

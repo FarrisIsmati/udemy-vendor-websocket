@@ -91,7 +91,7 @@ resource "aws_apigatewayv2_stage" "main" {
 resource "aws_apigatewayv2_api" "http_api_gateway" {
   name                         = "${var.app_name}"
   description                  = "Send vendor data to connected clients"
-  protocol_type                = ""
+  protocol_type                = "HTTP"
   route_selection_expression   = "$request.body.action"
 }
 
@@ -105,7 +105,7 @@ resource "aws_apigatewayv2_integration" "lambda_getvendors" {
 
 # Forward special requests ($connect, $disconnect) to our Lambda function so we can manage their state 
 resource "aws_apigatewayv2_route" "_getvendors" {
-  api_id    = aws_apigatewayv2_api.getvendors.id
+  api_id    = aws_apigatewayv2_api.http_api_gateway.id
   route_key = "getvendors"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_getvendors.id}"
 }

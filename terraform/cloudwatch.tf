@@ -11,8 +11,7 @@ resource "aws_cloudwatch_log_group" "api_gw_http" {
   retention_in_days = 7
 }
 
-
-resource "aws_cloudwatch_log_group" "lambda_main" {
-  name              = "/aws/lambda/${var.app_name}"
+resource "aws_cloudwatch_log_group" "lambda_getvendors" {
+  name              = "/aws/lambda/${var.app_name}-getvendors"
   retention_in_days = 7
 }

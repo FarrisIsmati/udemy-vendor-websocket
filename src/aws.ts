@@ -52,9 +52,7 @@ export const dynamoDbRemoveConnection = async (tableName: string, connectionId: 
 
 // Scan entire table
 // Option this time to handle pagination
-export const dynamoDbScanTable = async function* (tableName: string, limit: number = 25) { //  lastEvaluatedKey?: AWS.DynamoDB.Key
-    let lastEvaluatedKey: AWS.DynamoDB.Key | undefined;
-
+export const dynamoDbScanTable = async function* (tableName: string, limit: number = 25, lastEvaluatedKey?: AWS.DynamoDB.Key) {
     while (true) {
         const params: AWS.DynamoDB.ScanInput = {
             "TableName": tableName,

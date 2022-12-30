@@ -1,4 +1,4 @@
-import { marshall } from '@aws-sdk/util-dynamodb';
+import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { APIGatewayEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { dynamoDbScanTable } from './aws';
 
@@ -12,8 +12,8 @@ export const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyRe
     console.log('scanning table')
 
     const pageLimit = event.queryStringParameters?.limit ?? 25
-    const lastEvaluatedKey = event.queryStringParameters?.lastEvaluatedKey ? marshall(event.queryStringParameters?.lastEvaluatedKey) : undefined;
-
+    const lastEvaluatedKey = event.queryStringParameters?.lastEvaluatedKey ? marshall(JSON.stringify(event.queryStringParameters?.lastEvaluatedKey)) : undefined;
+    console.log('last evaluated key', lastEvaluatedKey);
     const scanTableGen = await dynamoDbScanTable(TABLE_NAME, Number(pageLimit), lastEvaluatedKey);
     if (scanTableGen instanceof Error) {
         console.log('error', scanTableGen.message)
@@ -37,7 +37,7 @@ export const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyRe
             body: JSON.stringify({
                 Items: iterator.value.Items,
                 count: iterator.value.Count,
-                lastEvaluatedKey: iterator.value.LastEvaluatedKey
+                lastEvaluatedKey: iterator.value.LastEvaluatedKey ? unmarshall(iterator.value.LastEvaluatedKey) : null
             }),
         };
     }

@@ -95,7 +95,8 @@ export const getAllScanResults = async <T>(tableName: string, limit: number = 25
     
         while(!isDone) {
             const iterator = await scanTableGen.next();
-    
+            console.log(JSON.stringify(iterator));
+
             if (!iterator) {
                 throw new Error('No iterator returned')
             }
@@ -107,7 +108,6 @@ export const getAllScanResults = async <T>(tableName: string, limit: number = 25
             if (iterator.value) {
                 iterator.value.Items!.map((result:any) => results.push(result))
             }
-            console.log(iterator.value);
         }
     
         return results;

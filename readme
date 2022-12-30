@@ -17,7 +17,7 @@ curl -XPOST "http://localhost:9002/2015-03-31/functions/function/invocations" -d
 TO TEST THE websocket
 npm i -g wscat
 
-Test connect : wscat -c "url"
+Test connect : wscat -c "url" (wscat -c "wss://8ramd7iqs7.execute-api.us-east-1.amazonaws.com/primary")
 Test disconnect: quitting
 Test a send message by running: {"action":"sendvendor", "data":"Hello world!"}
 

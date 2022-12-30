@@ -71,22 +71,6 @@ resource "aws_apigatewayv2_stage" "main" {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Creates the http gateway
 resource "aws_apigatewayv2_api" "http_api_gateway" {
   name                         = "${var.app_name}_http"

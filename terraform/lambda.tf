@@ -101,7 +101,7 @@ resource "aws_lambda_function" "getvendors" {
     variables = {
       AWS_TABLE_NAME = var.dynamodb_vendor_table_name
       AWS_REGION_NAME = var.aws_region
-      AWS_HTTP_URL = "${aws_apigatewayv2_api.websocket_api_gateway.api_endpoint}/${var.api_gateway_stage_name}"
+      AWS_HTTP_URL = "${aws_apigatewayv2_api.http_api_gateway.api_endpoint}/${var.api_gateway_stage_name}"
     }
   }
 }

@@ -50,23 +50,6 @@ export const dynamoDbRemoveConnection = async (tableName: string, connectionId: 
     }
 }
 
-// Get table metadata 
-export const dynamoDbDescribeTable = async (tableName: string) => {
-    try {
-        const table = await dynamodb.describeTable({
-            TableName: tableName
-        }).promise();
-        console.log('Table retrieved', table);
-        return table;
-    } catch(e) {
-        // We will return either an error, or throw one if we don't know what type it is
-        if (e instanceof Error) {
-            throw e;
-        }
-        throw new Error(`dynamoDbDescribeTable unexpected error`);
-    }
-}
-
 // Scan entire table
 // Option this time to handle pagination
 export const dynamoDbScanTable = async function* (tableName: string, limit: number = 25, lastEvaluatedKey?: AWS.DynamoDB.Key){
@@ -104,9 +87,6 @@ export const dynamoDbScanTable = async function* (tableName: string, limit: numb
 // Pagination might be in a future video, you can set it up yourself my reading docs or other tutorial videos
 export const getAllScanResults = async <T>(tableName: string, limit: number = 25) => {
     try {
-        // See if table exists, else throw an error
-        await dynamoDbDescribeTable(tableName);
-
         const scanTableGen = await dynamoDbScanTable(tableName, limit);
 
         const results: T[] = [];

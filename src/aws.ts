@@ -132,7 +132,7 @@ interface BroadcastMessageWebsocketProps {
 export const broadcastMessageWebsocket = async (props: BroadcastMessageWebsocketProps) => {
     const { apiGatewayManagementApi, connections, message, tableName } = props;
     const sendVendorsCall = connections?.map(async connection => {
-        const {connectionId} = connection;
+        const { connectionId } = connection;
         try {
             await apiGatewayManagementApi.postToConnection({ ConnectionId: connectionId, Data: message }).promise();
         } catch (e) { 

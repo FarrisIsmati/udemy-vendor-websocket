@@ -40,12 +40,10 @@ export const handler = async (event: SQSEvent): Promise<APIGatewayProxyResult> =
         }
     }
 
-    const connectionIds = dbRes.map((item) => item.connectionId );
-
     // Future use case how would a user handle broadcasting message to hundreds of thousands + people
     const broadcastRes = await broadcastMessageWebsocket({
         apiGatewayManagementApi: apigwManagementApi, 
-        connections: connectionIds,
+        connections: dbRes,
         message: message,
         tableName: TABLE_NAME
     });
@@ -59,7 +57,7 @@ export const handler = async (event: SQSEvent): Promise<APIGatewayProxyResult> =
             "body" : broadcastRes.message
         }
     }
-    console.log(`Sent message ${message} to ${connectionIds.length} users!`);
+    console.log(`Sent message ${message} to ${dbRes.length} users!`);
     
     const deleteMessageRes = await sqsDeleteMessage(AWS_SQS_URL, event.Records[0].receiptHandle)
     if (deleteMessageRes instanceof Error) {
@@ -76,7 +74,7 @@ export const handler = async (event: SQSEvent): Promise<APIGatewayProxyResult> =
     return {
         statusCode: 200,
         body: JSON.stringify({
-            message: `Sent message to ${connectionIds.length} users!`,
+            message: `Sent message to ${dbRes.length} users!`,
         }),
     };
 };

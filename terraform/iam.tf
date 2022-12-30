@@ -49,7 +49,8 @@ data "aws_iam_policy_document" "lambda_ws" {
     resources = [
       "arn:aws:sqs:${var.aws_region}:${local.account_id}:${var.sqs_queue_name}",
       "${aws_apigatewayv2_api.websocket_api_gateway.execution_arn}/*",
-      "arn:aws:dynamodb:${var.aws_region}:${local.account_id}:table/${var.websocket_table_name}"
+      "arn:aws:dynamodb:${var.aws_region}:${local.account_id}:table/${var.websocket_table_name}",
+      "arn:aws:dynamodb:${var.aws_region}:${local.account_id}:table/${var.dynamodb_vendor_table_name}"
     ]
   }
 }

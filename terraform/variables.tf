@@ -2,7 +2,7 @@
 variable "app_name" {
   type        = string
   description = "Application Name"
-  default     = "udemy-vendor-websocket"
+  default     = "udemy-vendor-gateway"
 }
 
 variable "app_name_generic" {

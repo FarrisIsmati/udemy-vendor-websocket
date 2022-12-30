@@ -1,6 +1,6 @@
 # Creates the websocket gateway
 resource "aws_apigatewayv2_api" "websocket_api_gateway" {
-  name                         = "${var.app_name}"
+  name                         = "${var.app_name}_websocket"
   description                  = "Send websocket data from twitter service to connected clients"
   protocol_type                = "WEBSOCKET"
   route_selection_expression   = "$request.body.action"
@@ -89,7 +89,7 @@ resource "aws_apigatewayv2_stage" "main" {
 
 # Creates the http gateway
 resource "aws_apigatewayv2_api" "http_api_gateway" {
-  name                         = "${var.app_name}"
+  name                         = "${var.app_name}_http"
   description                  = "Send vendor data to connected clients"
   protocol_type                = "HTTP"
 }

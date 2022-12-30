@@ -7,6 +7,7 @@ const AWS_HTTP_URL = process.env.AWS_HTTP_URL ?? '';
 const TABLE_NAME = process.env.AWS_TABLE_NAME ?? '';
 
 export const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
+    console.log('LAUNCHERZ')
     // Endpoint needs to remove the http:// from url
     const endpoint = new URL(AWS_HTTP_URL);
     const apigwManagementApi = new AWS.ApiGatewayManagementApi({
@@ -78,7 +79,7 @@ export const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyRe
     return {
         statusCode: 200,
         body: JSON.stringify({
-            // message: `Sent message to ${dbRes.Count} users!`,
+            message: `Jablowme`,
         }),
     };
 };

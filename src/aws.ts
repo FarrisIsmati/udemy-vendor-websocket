@@ -72,7 +72,7 @@ export const dynamoDbScanTable = async function* (tableName: string, limit: numb
             }
 
             lastEvaluatedKey = (result as AWS.DynamoDB.ScanOutput).LastEvaluatedKey;
-            console.log('LEK', lastEvaluatedKey, JSON.stringify(result));
+
             result.Items = result.Items?.map((item) => unmarshall(item)); // Unmarshall items
             yield result;
         } catch(e) {
@@ -88,7 +88,7 @@ export const dynamoDbScanTable = async function* (tableName: string, limit: numb
 // Puts all items into an object (note if scalability is an issue we would limit results, and call this over multiple processes)
 // Not the case here so no need to get too complicated just get it all
 // Pagination might be in a future video, you can set it up yourself my reading docs or other tutorial videos
-export const getAllScanResults = async <T>(tableName: string, limit: number = 25) => {
+export const getAllScanResults = async <T>(tableName: string, limit: number = 2) => {
     try {
         console.log('GEN')
         const scanTableGen = await dynamoDbScanTable(tableName, limit);

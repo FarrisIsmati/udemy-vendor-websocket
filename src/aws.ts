@@ -87,8 +87,9 @@ export const dynamoDbScanTable = async function* (tableName: string, limit: numb
 // Pagination might be in a future video, you can set it up yourself my reading docs or other tutorial videos
 export const getAllScanResults = async <T>(tableName: string, limit: number = 25) => {
     try {
+        console.log('GEN')
         const scanTableGen = await dynamoDbScanTable(tableName, limit);
-
+        console.log(scanTableGen)
         const results: T[] = [];
         let isDone = false;
     
@@ -106,6 +107,7 @@ export const getAllScanResults = async <T>(tableName: string, limit: number = 25
             if (iterator.value) {
                 iterator.value.Items!.map((result:any) => results.push(result))
             }
+            console.log(iterator.value);
         }
     
         return results;

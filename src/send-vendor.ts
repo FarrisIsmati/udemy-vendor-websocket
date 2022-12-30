@@ -1,6 +1,6 @@
 import { APIGatewayProxyResult, SQSEvent } from 'aws-lambda';
 import AWS from 'aws-sdk';
-import { broadcastMessageWebsocket, dynamoDbScanTable, getAllScanResults, sqsDeleteMessage } from './aws';
+import { broadcastMessageWebsocket, getAllScanResults, sqsDeleteMessage } from './aws';
 
 // env
 const AWS_SQS_URL = process.env.AWS_SQS_URL ?? '';
@@ -28,7 +28,7 @@ export const handler = async (event: SQSEvent): Promise<APIGatewayProxyResult> =
     }
 
     console.log('scanning table')
-    const dbRes = await getAllScanResults<AWS.DynamoDB.ScanOutput>(TABLE_NAME);
+    const dbRes = await getAllScanResults<{ connectionId: string }>(TABLE_NAME);
     if (dbRes instanceof Error) {
         console.log('error', dbRes.message)
         return {
@@ -40,44 +40,43 @@ export const handler = async (event: SQSEvent): Promise<APIGatewayProxyResult> =
         }
     }
 
-    console.log('DB RES');
-    console.log(JSON.stringify(dbRes));
+    const connectionIds = dbRes.map((item) => item.connectionId );
 
-    // // Future use case how would a user handle broadcasting message to hundreds of thousands + people
-    // const broadcastRes = await broadcastMessageWebsocket({
-    //     apiGatewayManagementApi: apigwManagementApi, 
-    //     connections: dbRes.Items as AWS.DynamoDB.ItemList, 
-    //     message: message,
-    //     tableName: TABLE_NAME
-    // });
-    // if (broadcastRes instanceof Error) {
-    //     console.log('error', broadcastRes.message)
-    //     return {
-    //         "statusCode" : 500,
-    //         "headers" : {
-    //             "content-type": "text/plain; charset=utf-8"
-    //         },
-    //         "body" : broadcastRes.message
-    //     }
-    // }
-    // console.log(`Sent message ${message} to ${dbRes.Count} users!`);
+    // Future use case how would a user handle broadcasting message to hundreds of thousands + people
+    const broadcastRes = await broadcastMessageWebsocket({
+        apiGatewayManagementApi: apigwManagementApi, 
+        connections: connectionIds,
+        message: message,
+        tableName: TABLE_NAME
+    });
+    if (broadcastRes instanceof Error) {
+        console.log('error', broadcastRes.message)
+        return {
+            "statusCode" : 500,
+            "headers" : {
+                "content-type": "text/plain; charset=utf-8"
+            },
+            "body" : broadcastRes.message
+        }
+    }
+    console.log(`Sent message ${message} to ${connectionIds.length} users!`);
     
-    // const deleteMessageRes = await sqsDeleteMessage(AWS_SQS_URL, event.Records[0].receiptHandle)
-    // if (deleteMessageRes instanceof Error) {
-    //     console.log('error', deleteMessageRes.message)
-    //     return {
-    //         "statusCode" : 500,
-    //         "headers" : {
-    //             "content-type": "text/plain; charset=utf-8"
-    //         },
-    //         "body" : deleteMessageRes.message
-    //     }
-    // }
+    const deleteMessageRes = await sqsDeleteMessage(AWS_SQS_URL, event.Records[0].receiptHandle)
+    if (deleteMessageRes instanceof Error) {
+        console.log('error', deleteMessageRes.message)
+        return {
+            "statusCode" : 500,
+            "headers" : {
+                "content-type": "text/plain; charset=utf-8"
+            },
+            "body" : deleteMessageRes.message
+        }
+    }
 
     return {
         statusCode: 200,
         body: JSON.stringify({
-            // message: `Sent message to ${dbRes.Count} users!`,
+            message: `Sent message to ${connectionIds.length} users!`,
         }),
     };
 };

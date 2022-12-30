@@ -74,6 +74,7 @@ export const dynamoDbScanTable = async function* (tableName: string, limit: numb
             lastEvaluatedKey = (result as AWS.DynamoDB.ScanOutput).LastEvaluatedKey;
 
             result.Items = result.Items?.map((item) => unmarshall(item)); // Unmarshall items
+
             yield result;
         } catch(e) {
             // We will return either an error, or throw one if we don't know what type it is
@@ -90,22 +91,19 @@ export const dynamoDbScanTable = async function* (tableName: string, limit: numb
 // Pagination might be in a future video, you can set it up yourself my reading docs or other tutorial videos
 export const getAllScanResults = async <T>(tableName: string, limit: number = 2) => {
     try {
-        console.log('GEN')
         const scanTableGen = await dynamoDbScanTable(tableName, limit);
-        console.log(scanTableGen)
         const results: T[] = [];
         let isDone = false;
     
         while(!isDone) {
             const iterator = await scanTableGen.next();
-            console.log(JSON.stringify(iterator));
 
             if (!iterator) {
                 throw new Error('No iterator returned')
             }
     
-            if (iterator.done) {
-                isDone = iterator.done;
+            if (iterator.done || !iterator.value.LastEvaluatedKey) {
+                isDone = true;
             }
     
             if (iterator.value) {

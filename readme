@@ -44,7 +44,7 @@ WEBSOCKET LAMBDA CODE
 3. connect.ts (code meat)
 4. disconnect.ts (code meat)
 5. send-vendor.ts (code meat)
-8. GET VENDOR
+8. GET VENDOR (future introduce caching & rate limiting on endpoint)
 
 WEBSOCKET TERRAFORM SETUP
 1. main.tf & variables.tf (includes setup on main.yml) (Create no test)

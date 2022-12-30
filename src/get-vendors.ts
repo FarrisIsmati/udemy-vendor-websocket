@@ -17,18 +17,6 @@ export const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyRe
         endpoint: endpoint.hostname + endpoint.pathname
     });
 
-    const message = event.body;
-
-    if (!message) {
-        return {
-            "statusCode" : 500,
-            "headers" : {
-                "content-type": "text/plain; charset=utf-8"
-            },
-            "body" : `event message empty or null ${message}`
-        }
-    }
-
     console.log('scanning table')
     const scanTableGen = await dynamoDbScanTable(TABLE_NAME);
     if (scanTableGen instanceof Error) {

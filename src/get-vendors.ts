@@ -12,7 +12,7 @@ export const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyRe
     console.log('scanning table')
 
     const pageLimit = event.queryStringParameters?.limit ?? 25
-    const lastEvaluatedKey = event.queryStringParameters?.lastEvaluatedKey ? marshall(JSON.stringify(event.queryStringParameters?.lastEvaluatedKey)) : undefined;
+    const lastEvaluatedKey = event.queryStringParameters?.lastEvaluatedKey ? marshall(JSON.parse(event.queryStringParameters?.lastEvaluatedKey)) : undefined;
     console.log('last evaluated key', lastEvaluatedKey);
     const scanTableGen = await dynamoDbScanTable(TABLE_NAME, Number(pageLimit), lastEvaluatedKey);
     if (scanTableGen instanceof Error) {

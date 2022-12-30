@@ -1,24 +1,20 @@
-import { APIGatewayEvent, APIGatewayProxyResult, SQSEvent } from 'aws-lambda';
-import AWS from 'aws-sdk';
-import { broadcastMessageWebsocket, dynamoDbScanTable, sqsDeleteMessage } from './aws';
+import { marshall } from '@aws-sdk/util-dynamodb';
+import { APIGatewayEvent, APIGatewayProxyResult } from 'aws-lambda';
+import { dynamoDbScanTable } from './aws';
 
 // env
-const AWS_HTTP_URL = process.env.AWS_HTTP_URL ?? '';
 const TABLE_NAME = process.env.AWS_TABLE_NAME ?? '';
 
 export const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
     console.log('stringed event');
     console.log(JSON.stringify(event));
 
-    // Endpoint needs to remove the http:// from url
-    const endpoint = new URL(AWS_HTTP_URL);
-    const apigwManagementApi = new AWS.ApiGatewayManagementApi({
-        apiVersion: '2018-11-29',
-        endpoint: endpoint.hostname + endpoint.pathname
-    });
-
     console.log('scanning table')
-    const scanTableGen = await dynamoDbScanTable(TABLE_NAME);
+
+    const pageLimit = event.queryStringParameters?.limit ?? 25
+    const lastEvaluatedKey = event.queryStringParameters?.lastEvaluatedKey ? marshall(event.queryStringParameters?.lastEvaluatedKey) : undefined;
+
+    const scanTableGen = await dynamoDbScanTable(TABLE_NAME, Number(pageLimit), lastEvaluatedKey);
     if (scanTableGen instanceof Error) {
         console.log('error', scanTableGen.message)
         return {
@@ -35,10 +31,20 @@ export const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyRe
     console.log('iterator!');
     console.log(JSON.stringify(iterator));
 
+    if (iterator.value) {
+        return {
+            statusCode: 200,
+            body: JSON.stringify({
+                Items: iterator.value.Items,
+                count: iterator.value.Count,
+                lastEvaluatedKey: iterator.value.LastEvaluatedKey
+            }),
+        };
+    }
     return {
-        statusCode: 200,
+        statusCode: 500,
         body: JSON.stringify({
-            message: `Jablowme`,
+            error: 'No value returned'
         }),
     };
 };

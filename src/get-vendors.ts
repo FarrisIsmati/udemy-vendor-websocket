@@ -13,29 +13,25 @@ export const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyRe
 
     console.log('scanning table')
 
-    let scanTableGen: AsyncGenerator<PromiseResult<DynamoDB.ScanOutput, AWSError>, void, unknown> | undefined;
+    let scanTableGen: AsyncGenerator<PromiseResult<DynamoDB.ScanOutput, AWSError>, void, unknown>;
     try {
         scanTableGen = await dynamoDbScanTable(TABLE_NAME, Number(pageLimit), lastEvaluatedKey);
-    } catch (e) {
-        if (scanTableGen instanceof Error) {
-            console.log('error', scanTableGen.message)
-            return {
-                statusCode : 500,
-                headers: {
-                    "content-type": "text/plain; charset=utf-8",
-                    "Access-Control-Allow-Headers" : "Content-Type",
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
-                },
-                body : scanTableGen.message
-            }
+    } catch(e) {
+        return {
+            statusCode : 500,
+            headers: {
+                "content-type": "text/plain; charset=utf-8",
+                "Access-Control-Allow-Headers" : "Content-Type",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+            },
+            body: e instanceof Error ? e.message : 'dynamoDbScanTable returned an unknown error'
         }
     }
 
-
     const iterator = await scanTableGen?.next();
-    console.log('Iterator result', iterator)
-    if (iterator?.value) {
+
+    if (iterator.value) {
         return {
             statusCode: 200,
             headers: {
@@ -51,14 +47,16 @@ export const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyRe
         };
     }
     return {
-        statusCode: 500,
+        statusCode: 200,
         headers: {
             "Access-Control-Allow-Headers" : "Content-Type",
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
         },
         body: JSON.stringify({
-            error: 'No value returned'
+            Items: [],
+            count: 0,
+            lastEvaluatedKey: null
         }),
     };
 };

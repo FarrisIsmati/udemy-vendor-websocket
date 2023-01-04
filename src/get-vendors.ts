@@ -14,11 +14,14 @@ export const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyRe
     if (scanTableGen instanceof Error) {
         console.log('error', scanTableGen.message)
         return {
-            "statusCode" : 500,
-            "headers" : {
-                "content-type": "text/plain; charset=utf-8"
+            statusCode : 500,
+            headers: {
+                "content-type": "text/plain; charset=utf-8",
+                "Access-Control-Allow-Headers" : "Content-Type",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
             },
-            "body" : scanTableGen.message
+            body : scanTableGen.message
         }
     }
 
@@ -41,6 +44,11 @@ export const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyRe
     }
     return {
         statusCode: 500,
+        headers: {
+            "Access-Control-Allow-Headers" : "Content-Type",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+        },
         body: JSON.stringify({
             error: 'No value returned'
         }),

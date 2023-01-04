@@ -27,6 +27,11 @@ export const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyRe
     if (iterator.value) {
         return {
             statusCode: 200,
+            headers: {
+                "Access-Control-Allow-Headers" : "Content-Type",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+            },
             body: JSON.stringify({
                 Items: iterator.value.Items,
                 count: iterator.value.Count,

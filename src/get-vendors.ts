@@ -6,14 +6,10 @@ import { dynamoDbScanTable } from './aws';
 const TABLE_NAME = process.env.AWS_TABLE_NAME ?? '';
 
 export const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
-    console.log('stringed event');
-    console.log(JSON.stringify(event));
-
-    console.log('scanning table')
-
     const pageLimit = event.queryStringParameters?.limit ?? 25
     const lastEvaluatedKey = event.queryStringParameters?.lastEvaluatedKey ? marshall(JSON.parse(event.queryStringParameters?.lastEvaluatedKey)) : undefined;
-    console.log('last evaluated key', lastEvaluatedKey);
+
+    console.log('scanning table')
     const scanTableGen = await dynamoDbScanTable(TABLE_NAME, Number(pageLimit), lastEvaluatedKey);
     if (scanTableGen instanceof Error) {
         console.log('error', scanTableGen.message)
@@ -27,9 +23,6 @@ export const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyRe
     }
 
     const iterator = await scanTableGen.next();
-
-    console.log('iterator!');
-    console.log(JSON.stringify(iterator));
 
     if (iterator.value) {
         return {

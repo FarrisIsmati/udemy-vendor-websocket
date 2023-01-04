@@ -76,6 +76,12 @@ resource "aws_apigatewayv2_api" "http_api_gateway" {
   name                         = "${var.app_name}_http"
   description                  = "Send vendor data to connected clients"
   protocol_type                = "HTTP"
+  cors_configuration { // Allow CORS it's necessary
+    allow_origins = ["*"]
+    allow_methods = ["POST", "GET", "OPTIONS"]
+    allow_headers = ["content-type"]
+    max_age = 300
+  }
 }
 
 # Creates the link between lambda function and gateway

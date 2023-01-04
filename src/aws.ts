@@ -77,9 +77,9 @@ export const dynamoDbScanTable = async function* (tableName: string, limit: numb
         } catch(e) {
             // We will return either an error, or throw one if we don't know what type it is
             if (e instanceof Error) {
-                return e
+                throw e
             }
-            return new Error(`dynamoDbScanTable unexpected error`);
+            throw new Error(`dynamoDbScanTable unexpected error`);
         }
     }
 }

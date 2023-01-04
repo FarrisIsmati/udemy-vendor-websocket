@@ -34,7 +34,7 @@ export const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyRe
 
 
     const iterator = await scanTableGen?.next();
-
+    console.log('Iterator result', iterator)
     if (iterator?.value) {
         return {
             statusCode: 200,

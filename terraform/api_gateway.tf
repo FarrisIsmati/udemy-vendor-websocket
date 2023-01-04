@@ -80,18 +80,9 @@ resource "aws_apigatewayv2_api" "http_api_gateway" {
     allow_origins = ["*"]
     allow_methods = ["POST", "GET", "OPTIONS"]
     allow_headers = ["content-type"]
-    max_age = 300
+    # max_age = 300
   }
 }
-
-# # Enable CORs
-# module "cors" {
-#   source = "squidfunk/api-gateway-enable-cors/aws"
-#   version = "0.3.3"
-
-#   api_id          = aws_apigatewayv2_api.http_api_gateway.
-#   api_resource_id = aws_apigatewayv2_api.http_api_gateway.id
-# }
 
 # Creates the link between lambda function and gateway
 resource "aws_apigatewayv2_integration" "lambda_getvendors" {

@@ -13,17 +13,17 @@ COPY package.json .
 RUN npm install\
         && npm install typescript -g
 
-# Use yum to get unzip (-y handles interactivity) yum is linux apt-get is ubuntu
-# This is a package manager than linux uses (the OS that aws-lambda-nodejs:12 is running)
-# with yum similar to npm we can install things we might need and in this case we need unzip
-RUN yum -y update
-RUN yum -y install unzip
-# Why do we need unzip?
-# We need to install this aws cli package, and unzip the installation in our container so we can run the install
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" -s
-RUN unzip -q awscliv2.zip
-# By installing awscli we can now do something~~~
-RUN ./aws/install
+# # Use yum to get unzip (-y handles interactivity) yum is linux apt-get is ubuntu
+# # This is a package manager than linux uses (the OS that aws-lambda-nodejs:12 is running)
+# # with yum similar to npm we can install things we might need and in this case we need unzip
+# RUN yum -y update
+# RUN yum -y install unzip
+# # Why do we need unzip?
+# # We need to install this aws cli package, and unzip the installation in our container so we can run the install
+# RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" -s
+# RUN unzip -q awscliv2.zip
+# # By installing awscli we can now do something~~~
+# RUN ./aws/install
 
 COPY . .
 

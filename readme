@@ -24,6 +24,7 @@ Test a send message by running: {"action":"sendvendor", "data":"Hello world!"}
 
 # STEPS WHEN RECORDING
 GATEWAY REPO SETUP #ENSURE YOU RENAME ALL OF THIS TO GATEWAY BECAUSE IT CONTAINS BOTH WEBSOCKET AND HTTP PROTOCOLS
+# RENAME TO API
 0. High level overview of websockets and how it all will work (real time communication, persist connection state, update all connections)
 1. Create github repo online (setup all actions needed) secrets
 2. .gitignore, .dockerignore, package.json (add dependencies), tsconfig.json (ensure its there) (all core basics)

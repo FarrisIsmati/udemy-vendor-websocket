@@ -43,13 +43,13 @@ COPY package.json .
 RUN npm install\
         && npm install typescript -g
 
-# Use yum to get unzip (-y handles interactivity) yum is linux apt-get is ubuntu
-RUN yum -y update
-RUN yum -y install unzip
-# Install awscli
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" -s
-RUN unzip -q awscliv2.zip
-RUN ./aws/install
+# # Use yum to get unzip (-y handles interactivity) yum is linux apt-get is ubuntu
+# RUN yum -y update
+# RUN yum -y install unzip
+# # Install awscli
+# RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" -s
+# RUN unzip -q awscliv2.zip
+# RUN ./aws/install
 
 COPY . .
 
@@ -70,13 +70,13 @@ COPY package.json .
 RUN npm install\
         && npm install typescript -g
 
-# Use yum to get unzip (-y handles interactivity) yum is linux apt-get is ubuntu
-RUN yum -y update
-RUN yum -y install unzip
-# Install awscli
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" -s
-RUN unzip -q awscliv2.zip
-RUN ./aws/install
+# # Use yum to get unzip (-y handles interactivity) yum is linux apt-get is ubuntu
+# RUN yum -y update
+# RUN yum -y install unzip
+# # Install awscli
+# RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" -s
+# RUN unzip -q awscliv2.zip
+# RUN ./aws/install
 
 COPY . .
 
@@ -96,13 +96,13 @@ COPY package.json .
 RUN npm install\
         && npm install typescript -g
 
-# Use yum to get unzip (-y handles interactivity) yum is linux apt-get is ubuntu
-RUN yum -y update
-RUN yum -y install unzip
-# Install awscli
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" -s
-RUN unzip -q awscliv2.zip
-RUN ./aws/install
+# # Use yum to get unzip (-y handles interactivity) yum is linux apt-get is ubuntu
+# RUN yum -y update
+# RUN yum -y install unzip
+# # Install awscli
+# RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" -s
+# RUN unzip -q awscliv2.zip
+# RUN ./aws/install
 
 COPY . .
 
